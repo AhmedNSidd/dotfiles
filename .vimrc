@@ -69,7 +69,7 @@ nnoremap <leader>ee :Explore<CR>
 nnoremap <M-n> :cnext<CR>
 nnoremap <M-p> :cprevious<CR>
 "" Shortcuts for terminal
-nnoremap <leader>tt Bterm
+nnoremap <leader>tt :Bterm<CR>
 "" Shortcuts for code navigation
 nnoremap gr :ALEFindReferences -quickfix<CR>
 
