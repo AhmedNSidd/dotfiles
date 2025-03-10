@@ -40,12 +40,15 @@ let g:go_test_timeout = '30s' " Increase test timeout time from 10s
 
 call plug#end()
 
-" Set leader key to spacebar
+" Vim configurations
+"" Set leader key to spacebar
 let mapleader = " "
-
+" Open splits on the bottom instead of top
+"set splitbelow
+" Open splits on the right instead of the left
+set splitright
 set autowrite
-
-" Enable true color support
+"" Enable true color support
 set termguicolors
 
 " Netrw configurations
@@ -55,13 +58,18 @@ let g:netrw_altv = 1
 " netrw
 let g:netrw_keepdir = 0
 
+" Custom commands
+"" Open up a small terminal window
+command Bterm botright terminal
+
 " Keybindings
 "" Shortcuts for Explore / folder directory navigation
-nnoremap <leader>e :Explore<CR>
-nnoremap <leader>E :Lexplore<CR>
+nnoremap <leader>ee :Explore<CR>
 "" Shorcuts for navigating through quickfix list quickly
 nnoremap <M-n> :cnext<CR>
 nnoremap <M-p> :cprevious<CR>
+"" Shortcuts for terminal
+nnoremap <leader>tt Bterm
 "" Shortcuts for code navigation
 nnoremap gr :ALEFindReferences -quickfix<CR>
 
@@ -76,3 +84,10 @@ augroup DiffFormatting
   autocmd OptionSet diff if &diff | setlocal wrap | endif
 augroup END
 
+" Resize the terminal window to a smaller size whenever it's opened
+autocmd TerminalWinOpen *
+  \ if &buftype == 'terminal' |
+  \   resize 9 |
+  \   setlocal termwinsize=0x140 |
+  \   setlocal nowrap |
+  \ endif
