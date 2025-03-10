@@ -12,7 +12,7 @@ let g:lumen_dark_colorscheme = 'catppuccin_mocha'
 Plug 'dense-analysis/ale'
 let g:ale_linters = {'go': ['gopls', 'golangci-lint']}
 let g:ale_fixers = {'go': ['goimports', 'golines']}
-let g:ale_go_golines_options = '--shorten-comments'
+let g:ale_go_golines_options = '--shorten-comments --max-len=120'
 let g:ale_lint_on_insert_leave = 0 " Turn off linting when leaving insert, causes delay otherwise
 let g:ale_fix_on_save = 1 " Automatically run fixers when we save file
 
@@ -28,6 +28,9 @@ Plug 'tpope/vim-fugitive'
 
 "" Plugin for working with Git diffs (& their hunks)
 Plug 'airblade/vim-gitgutter'
+
+"" Plugin for previewing markdown files
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 
 "" Plugin for working with Golang projects
 Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
@@ -45,18 +48,25 @@ set autowrite
 " Enable true color support
 set termguicolors
 
+" Netrw configurations
+"" Open vertical splits in netrw to the right instead of left
+let g:netrw_altv = 1
 " Change vim's working directory to the one that's currently being viewed in
 " netrw
 let g:netrw_keepdir = 0
 
 " Keybindings
-nmap <silent> gr :ALEFindReferences -quickfix<CR>
+"" Shortcuts for Explore / folder directory navigation
+nnoremap <leader>e :Explore<CR>
+nnoremap <leader>E :Lexplore<CR>
 "" Shorcuts for navigating through quickfix list quickly
 nnoremap <M-n> :cnext<CR>
 nnoremap <M-p> :cprevious<CR>
+"" Shortcuts for code navigation
+nnoremap gr :ALEFindReferences -quickfix<CR>
 
 " Set specific options for vimdiff
-set diffopt=internal,filler,closeoff,algorithm:patience
+set diffopt=internal,filler,closeoff,algorithm:histogram
 
 " Format the diff output to make it easier to read:
 " 1. Enable text wrapping
