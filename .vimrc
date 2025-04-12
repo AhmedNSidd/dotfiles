@@ -70,10 +70,6 @@ let g:netrw_altv = 1
 " netrw
 let g:netrw_keepdir = 0
 
-" Custom commands
-"" Open up a small terminal window
-command Bterm botright terminal
-
 " Keybindings
 "" Shortcuts for copying to clipboard
 nmap <leader>cc <leader>c_
@@ -84,7 +80,7 @@ nnoremap <leader>ee :Explore<CR>
 nnoremap <M-n> :cnext<CR>
 nnoremap <M-p> :cprevious<CR>
 "" Shortcuts for terminal
-nnoremap <leader>tt :Bterm<CR>
+nnoremap <leader>tt :call ToggleTerminal()<CR>
 "" Shortcuts for code navigation
 nnoremap gr :ALEFindReferences -quickfix<CR>
 
@@ -99,10 +95,22 @@ augroup DiffFormatting
   autocmd OptionSet diff if &diff | setlocal wrap | endif
 augroup END
 
-" Resize the terminal window to a smaller size whenever it's opened
-autocmd TerminalWinOpen *
-  \ if &buftype == 'terminal' |
-  \   resize 9 |
-  \   setlocal termwinsize=0x140 |
-  \   setlocal nowrap |
-  \ endif
+" Function for toggling a terminal window
+function! ToggleTerminal()
+  " Check if there's already a terminal window
+  for win in range(1, winnr('$'))
+    if getwinvar(win, '&buftype') == 'terminal'
+      " Terminal exists, close it
+      execute win . 'close!'
+      return
+    endif
+  endfor
+
+  " No terminal found, open a new one
+  botright terminal
+  resize 9
+  setlocal termwinsize=0x140
+  setlocal nowrap
+  setlocal winfixheight
+endfunction
+
