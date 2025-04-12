@@ -10,8 +10,14 @@ let g:lumen_dark_colorscheme = 'catppuccin_mocha'
 
 "" Plugin for linting / fixing asynchronously
 Plug 'dense-analysis/ale'
-let g:ale_linters = {'go': ['gopls', 'golangci-lint']}
-let g:ale_fixers = {'go': ['goimports', 'golines']}
+let g:ale_linters = {
+\	'go': ['gopls', 'golangci-lint'],
+\	'proto': ['buf-lint']
+\}
+let g:ale_fixers = {
+\	'go': ['goimports', 'golines'],
+\	'proto': ['buf-format']
+\}
 let g:ale_go_golines_options = '--shorten-comments --max-len=120'
 let g:ale_lint_on_insert_leave = 0 " Turn off linting when leaving insert, causes delay otherwise
 let g:ale_fix_on_save = 1 " Automatically run fixers when we save file
