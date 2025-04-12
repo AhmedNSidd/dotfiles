@@ -3,10 +3,13 @@ call plug#begin()
 "" Plugin for colorscheme
 Plug 'catppuccin/vim', { 'as': 'catppuccin' }
 
-"" Plugin for dynamically changing colorscheme if it's day/night
-Plug 'vimpostor/vim-lumen'
-let g:lumen_light_colorscheme = 'catppuccin_latte'
-let g:lumen_dark_colorscheme = 'catppuccin_mocha'
+if has("unix")
+else
+	"" Plugin for dynamically changing colorscheme if it's day/night
+	Plug 'vimpostor/vim-lumen'
+	let g:lumen_light_colorscheme = 'catppuccin_latte'
+	let g:lumen_dark_colorscheme = 'catppuccin_mocha'
+endif
 
 "" Plugin for linting / fixing asynchronously
 Plug 'dense-analysis/ale'
