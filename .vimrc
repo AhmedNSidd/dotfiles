@@ -47,6 +47,9 @@ let g:go_fmt_autosave = 0 " Disable auto-formatting (handled by ALE)
 let g:go_metalinter_enabled = [] " Disable linting (handled by ALE)
 let g:go_test_timeout = '30s' " Increase test timeout time from 10s
 
+"" Plugin for copying text in vim from remote connections
+Plug 'ojroques/vim-oscyank', {'branch': 'main'}
+
 call plug#end()
 
 " Vim configurations
@@ -72,6 +75,9 @@ let g:netrw_keepdir = 0
 command Bterm botright terminal
 
 " Keybindings
+"" Shortcuts for copying to clipboard
+nmap <leader>cc <leader>c_
+vmap <leader>c <Plug>OSCYankVisual
 "" Shortcuts for Explore / folder directory navigation
 nnoremap <leader>ee :Explore<CR>
 "" Shorcuts for navigating through quickfix list quickly
