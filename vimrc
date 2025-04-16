@@ -15,13 +15,24 @@ endif
 Plug 'dense-analysis/ale'
 let g:ale_linters = {
 \	'go': ['gopls', 'golangci-lint'],
-\	'proto': ['buf-lint']
+\	'proto': ['buf-lint'],
+\       'scala': ['metals']
 \}
 let g:ale_fixers = {
 \	'go': ['goimports', 'golines'],
-\	'proto': ['buf-format']
+\	'proto': ['buf-format'],
+\	'scala': ['scalafmt'],
 \}
 let g:ale_go_golines_options = '--shorten-comments --max-len=120'
+" Add to your vimrc
+let g:ale_scala_metals_executable = 'metals'
+let g:ale_scala_metals_project_root = '/Users/ahsiddiqui/Desktop/workspace/projects/personal/watchlistarr'
+" 3. Configure ALE LSP functionality
+let g:ale_completion_enabled = 1
+let g:ale_hover_cursor = 1
+
+" 4. Ensure Metals is properly detected
+let g:ale_linter_aliases = {'scala': ['scala']}
 let g:ale_lint_on_insert_leave = 0 " Turn off linting when leaving insert, causes delay otherwise
 let g:ale_fix_on_save = 1 " Automatically run fixers when we save file
 
