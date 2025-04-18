@@ -16,12 +16,8 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
--- Colemak: map f/h, n/j, e/k, i/l in normal/visual mode
---vim.opt.langmap = "fh,nj,ek,il,FH,NJ,EK,IL"
-
 -- Load configuration modules
-require("plugins")   -- Load and configure plugins
+require("plugins")   -- Load and configure plugins (this will now handle LSP setup)
 require("options")   -- General Neovim options
 require("keymaps")   -- Key mappings
-require("autocmds")  -- Autocommand groups
-
+require("autocmds")  -- Autocommand groups (keep general autocmds here)

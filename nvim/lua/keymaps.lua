@@ -33,3 +33,18 @@ vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Live grep (Telesc
 vim.keymap.set("n", "<leader>wp", function()
   require("telescope").extensions.workspaces.workspaces()
 end, { desc = "Switch Project" })
+
+-- Define the shortcut for toggling the CodeCompanion Chat window
+-- <leader>cc is just an example, choose any key combination you like
+vim.keymap.set(
+  "n", -- Mode: Normal mode (most common for commands like this)
+  "<leader>cc", -- LHS: The key sequence you press (<leader> usually maps to backslash \)
+  ":CodeCompanionChat Toggle<CR>", -- RHS: The command to execute, followed by <CR> (Enter)
+  { -- Options:
+    noremap = true, -- Recommended: Prevents recursive mapping issues
+    silent = true, -- Recommended: Don't echo the command when executed
+    desc = "Toggle CodeCompanion Chat" -- Description (useful for help/which-key)
+  }
+)
+
+vim.keymap.set("n", "<leader>x", vim.diagnostic.open_float, { noremap=true, silent=true, desc="Show line diagnostics" })
