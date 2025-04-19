@@ -419,6 +419,44 @@ require("lazy").setup({
 		-- Plugin for copying from remote servers
 		{ "ojroques/vim-oscyank" },
 
+		-- Plugin for in-line git diff indicators
+		{
+			"lewis6991/gitsigns.nvim",
+			dependencies = { "nvim-lua/plenary.nvim" },
+			event = { "BufReadPre", "BufNewFile" },
+			config = function()
+				require("gitsigns").setup({
+					-- keymaps: navigate hunks, stage/reset, preview, blame, etc.
+					on_attach = function(bufnr)
+						local gs = package.loaded.gitsigns
+						local function map(mode, l, r, opts)
+							opts = opts or { buffer = bufnr }
+							vim.keymap.set(mode, l, r, opts)
+						end
+
+						-- Navigation
+						map("n", "]h", gs.next_hunk, { desc = "Next Git hunk" })
+						map("n", "[h", gs.prev_hunk, { desc = "Prev Git hunk" })
+						-- Actions
+						--map("n", "<leader>ghs", gs.stage_hunk, { desc = "Stage hunk" })
+						--map("n", "<leader>ghr", gs.reset_hunk, { desc = "Reset hunk" })
+						--map("v", "<leader>ghs", function()
+						--	gs.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
+						--end)
+						--map("v", "<leader>ghr", function()
+						--	gs.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
+						--end)
+						---- Preview & blame
+						--map("n", "<leader>ghp", gs.preview_hunk, { desc = "Preview hunk" })
+						--map("n", "<leader>ghb", function()
+						--	gs.blame_line({ full = true })
+						--end, { desc = "Blame line" })
+						--map("n", "<leader>ghd", gs.diffthis, { desc = "Diff against index" })
+					end,
+				})
+			end,
+		},
+
 		-- GitHub in Neovim plugin
 		{
 			"pwntester/octo.nvim",
