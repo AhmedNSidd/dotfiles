@@ -104,11 +104,26 @@ require("lazy").setup({
 		{
 			"stevearc/oil.nvim",
 			dependencies = { "echasnovski/mini.icons" },
-			opts = {
-				default_file_explorer = true,
-				view_options = { show_hidden = true },
-				delete_to_trash = true,
-			},
+			config = function()
+				require("oil").setup({
+					default_file_explorer = true,
+					view_options = { show_hidden = true },
+					delete_to_trash = true,
+				})
+
+				-- Add keymapping to synchronize tab working directory to current Oil directory
+				vim.keymap.set("n", "<leader>cd", function()
+					-- ask Oil for the directory it’s currently showing
+					local dir = require("oil").get_current_dir(0)
+					if not dir or dir == "" then
+						vim.notify("⚠️  Not in an Oil buffer", vim.log.levels.WARN)
+						return
+					end
+					-- change Neovim's cwd to that path
+					vim.cmd("tcd " .. vim.fn.fnameescape(dir))
+					vim.notify("✓ Synced tab to current directory: " .. dir, vim.log.levels.INFO)
+				end, { desc = "Oil.nvim: sync current tab working directory to current Oil directory" })
+			end,
 			lazy = false,
 		},
 
