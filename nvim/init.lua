@@ -188,6 +188,15 @@ require("lazy").setup({
 					bufmap("n", "[d", vim.diagnostic.goto_prev, "Prev Diagnostic")
 					bufmap("n", "]d", vim.diagnostic.goto_next, "Next Diagnostic")
 					bufmap("n", "<leader>x", vim.diagnostic.open_float, "Show diagnostics")
+
+					-- Define a binding to toggle on/off the diagnostic signs
+					-- (used to quickly check the in-line git diffs of certain lines)
+					local diagnostic_signs_enabled = true
+					function _G.toggle_diagnostic_signs()
+						diagnostic_signs_enabled = not diagnostic_signs_enabled
+						vim.diagnostic.config({ signs = diagnostic_signs_enabled })
+					end
+					vim.keymap.set("n", "<leader>td", _G.toggle_diagnostic_signs, { desc = "Toggle LSP diagnostic signs" })
 				end
 
 				-- Hook up LSP servers with cmp-nvim-lsp
