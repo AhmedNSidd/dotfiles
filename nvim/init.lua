@@ -503,6 +503,26 @@ require("lazy").setup({
 				require("octo").setup({
 					use_local_fs = true,
 				})
+				-- Create keymap to view PR file in a new tab
+				vim.keymap.set("n", "<localleader>pe", function()
+					-- capture both side and path
+					local ok, side, path = pcall(require("octo.utils").get_split_and_path, vim.api.nvim_get_current_buf())
+					if not ok or not path then
+						vim.notify("Octo: no PR file under cursor", vim.log.levels.ERROR)
+						return
+					end
+
+					-- open the reviewed file in a new tab
+					vim.cmd("tabedit " .. path)
+
+					-- now that we're in the file buffer, allow edits
+					-- (unset readonly if present, and turn modifiable on)
+					vim.api.nvim_buf_set_option(0, "readonly", false)
+					vim.api.nvim_buf_set_option(0, "modifiable", true)
+				end, {
+					desc = "Octo: open reviewed file in new tab (and allow edits)",
+					silent = true,
+				})
 			end,
 		},
 
