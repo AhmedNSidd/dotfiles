@@ -513,6 +513,7 @@ require("lazy").setup({
 				"nvim-treesitter/nvim-treesitter",
 				"nvim-lua/plenary.nvim",
 				"neovim/nvim-lspconfig",
+				"ray-x/guihua.lua",
 			},
 			config = function()
 				require("go").setup({
