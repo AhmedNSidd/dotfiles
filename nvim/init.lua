@@ -404,6 +404,7 @@ require("lazy").setup({
 								callback = function()
 									vim.lsp.buf.format({
 										bufnr = bufnr,
+										timeout_ms = 10000,
 										filter = function(c)
 											return c.name == "null-ls"
 										end,
