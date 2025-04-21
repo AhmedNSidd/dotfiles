@@ -443,6 +443,9 @@ require("lazy").setup({
 				require("toggleterm").setup({
 					open_mapping = [[<C-\>]],
 					direction = "float",
+					on_open = function(term)
+						vim.api.nvim_buf_set_keymap(term.bufnr, "t", "<Esc>", "<C-\\><C-n>", { noremap = true })
+					end,
 				})
 			end,
 		},
