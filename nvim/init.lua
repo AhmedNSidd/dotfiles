@@ -364,7 +364,7 @@ require("lazy").setup({
 			config = function()
 				require("mason").setup()
 				require("mason-null-ls").setup({
-					ensure_installed = { "buf", "golangci_lint", "golines", "stylua" },
+					ensure_installed = { "stylua", "buf", "golangci_lint", "golines", "scalafmt" },
 					automatic_installation = true,
 					automatic_setup = false,
 				})
@@ -379,6 +379,11 @@ require("lazy").setup({
 				local null_ls = require("null-ls")
 				null_ls.setup({
 					sources = {
+						-- Lua
+						null_ls.builtins.formatting.stylua.with({
+							extra_args = { "--indent-width", "2" },
+						}),
+
 						-- Protobuf
 						null_ls.builtins.diagnostics.buf,
 						null_ls.builtins.formatting.buf,
@@ -389,10 +394,8 @@ require("lazy").setup({
 							extra_args = { "--max-len", "120", "--shorten-comments" },
 						}),
 
-						-- Lua
-						null_ls.builtins.formatting.stylua.with({
-							extra_args = { "--indent-width", "2" },
-						}),
+						-- Scala
+						null_ls.builtins.formatting.scalafmt,
 					},
 					on_attach = function(client, bufnr)
 						if client.supports_method("textDocument/formatting") then
@@ -523,6 +526,51 @@ require("lazy").setup({
 					-- run tests in a floating window
 					run_in_floaterm = true,
 				})
+			end,
+		},
+
+		-- Plugin for Scala (LSP included)
+		{
+			"scalameta/nvim-metals",
+			ft = { "scala", "sbt", "java" },
+			dependencies = {
+				"nvim-lua/plenary.nvim",
+				"nvim-telescope/telescope.nvim",
+				"hrsh7th/nvim-cmp",
+			},
+			config = function()
+				local metals = require("metals")
+				local nvim_metals_config = metals.bare_config()
+				nvim_metals_config.capabilities = require("cmp_nvim_lsp").default_capabilities()
+				nvim_metals_config.on_attach = function(client, bufnr)
+					local bufmap = function(mode, lhs, rhs, desc)
+						vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
+					end
+
+					-- common LSP keymaps
+					bufmap("n", "gd", vim.lsp.buf.definition, "Go to Definition")
+					bufmap("n", "K", vim.lsp.buf.hover, "Hover Documentation")
+					bufmap("n", "gi", vim.lsp.buf.implementation, "Go to Implementation")
+					bufmap("n", "<leader>rn", vim.lsp.buf.rename, "Rename Symbol")
+					bufmap("n", "[d", vim.diagnostic.goto_prev, "Prev Diagnostic")
+					bufmap("n", "]d", vim.diagnostic.goto_next, "Next Diagnostic")
+					bufmap("n", "<leader>x", vim.diagnostic.open_float, "Show diagnostics")
+
+					-- Metals‐specific commands (requires telescope extension)
+					vim.keymap.set("n", "<leader>ws", function()
+						require("telescope").extensions.metals.commands()
+					end, { buffer = bufnr, desc = "Metals commands" })
+				end
+
+				-- enable some handy Metals settings
+				--nvim_metals_config.settings = {
+				--	showImplicitArguments = true,
+				--	showInferredType = true,
+				--	excludedPackages = { "akka.actor.typed.javadsl", "com.github" },
+				--}
+
+				-- finally launch or attach to your build server
+				metals.initialize_or_attach(nvim_metals_config)
 			end,
 		},
 	},
