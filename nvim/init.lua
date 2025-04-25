@@ -431,7 +431,25 @@ require("lazy").setup({
 					cmp = {
 						enabled = true,
 					},
-					display = { chat = { window = { layout = "float" } } },
+					display = {
+						chat = {
+							window = {
+								layout = "float",
+								width = 0.85,
+							},
+						},
+					},
+					adapters = {
+						copilot = function()
+							return require("codecompanion.adapters").extend("copilot", {
+								schema = {
+									model = {
+										default = "o4-mini",
+									},
+								},
+							})
+						end,
+					},
 				})
 			end,
 		},
