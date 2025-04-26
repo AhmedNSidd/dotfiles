@@ -498,6 +498,7 @@ require("lazy").setup({
 		-- GitHub in Neovim plugin
 		{
 			"pwntester/octo.nvim",
+			commit = "75d1f6a09536e3bffa86a781cdb0bd72da57acc3",
 			dependencies = {
 				"nvim-lua/plenary.nvim",
 				"nvim-telescope/telescope.nvim",
