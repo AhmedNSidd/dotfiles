@@ -77,6 +77,10 @@ vim.api.nvim_create_autocmd("FileType", {
 -- Open vertical splits on the right
 vim.opt.splitright = true
 
+-- Set how tabs are displayed visually without changing their underlying character
+--vim.opt.tabstop = 4 -- Display tabs as 4 spaces wide instead of 8
+--vim.opt.shiftwidth = 4 -- Use 4 spaces for each level of indentation
+
 -- ===================================================================
 -- Plugins
 -- ===================================================================
@@ -384,6 +388,11 @@ require("lazy").setup({
 							extra_args = { "--indent-width", "2" },
 						}),
 
+						-- YAML
+						null_ls.builtins.formatting.prettier.with({
+							filetypes = { "yaml", "yml" },
+						}),
+
 						-- Protobuf
 						null_ls.builtins.diagnostics.buf,
 						null_ls.builtins.formatting.buf,
@@ -513,27 +522,52 @@ require("lazy").setup({
 			end,
 		},
 
+		-- Plugin for Git integration
+		{
+			"tpope/vim-fugitive",
+			event = { "BufReadPre", "BufNewFile" },
+			config = function()
+				-- Optional: Add keymaps for common git operations
+				--vim.keymap.set("n", "<leader>gs", ":Git<CR>", { desc = "Git status" })
+				--vim.keymap.set("n", "<leader>gb", ":Git blame<CR>", { desc = "Git blame" })
+				--vim.keymap.set("n", "<leader>gd", ":Git diff<CR>", { desc = "Git diff" })
+				--vim.keymap.set("n", "<leader>gl", ":Git log<CR>", { desc = "Git log" })
+			end,
+		},
+
 		-- Plugin for Golang
 		{
-			"ray-x/go.nvim",
-			dependencies = {
-				"nvim-treesitter/nvim-treesitter",
-				"nvim-lua/plenary.nvim",
-				"neovim/nvim-lspconfig",
-				"ray-x/guihua.lua",
-			},
-			config = function()
-				require("go").setup({
-					-- Don't reconfigure gopls as it is already configured in lspconfig
-					lsp_cfg = false,
+			"fatih/vim-go",
+			ft = { "go", "gomod" },
+			init = function()
+				-- Disable vim-go's formatting features in favor of LSP
+				vim.g.go_fmt_autosave = 0
+				vim.g.go_fmt_command = "gopls"
+				vim.g.go_gopls_enabled = 0 -- Disable gopls in vim-go as we're using lspconfig
+				vim.g.go_imports_autosave = 0 -- Disable auto imports
+				vim.g.go_mod_fmt_autosave = 0 -- Disable go.mod formatting
+				vim.g.go_doc_keywordprg_enabled = 0 -- Disable K for GoDoc
 
-					-- use gopls under the hood for imports & struct filling
-					goimports = "golines",
-					fillstruct = "gopls",
+				-- Set terminal testing options
+				vim.g.go_term_enabled = 1 -- Run the tests in a separate terminal window
+				vim.g.go_term_reuse = 1 -- Reuse the same terminal window for any new tests that run
+				--vim.g.go_term_mode = "split" -- Open the terminal window in a horizontal split
+				vim.g.go_term_width = 80 -- Resize terminal width
 
-					-- run tests in a floating window
-					run_in_floaterm = true,
-				})
+				-- Set testing options
+				vim.g.go_test_show_name = 1
+
+				-- Disable default mappings to avoid conflicts
+				vim.g.go_def_mapping_enabled = 0
+
+				-- Coverage keybinding
+				vim.keymap.set("n", "<leader>gc", "<cmd>GoCoverage<CR>", { silent = true, desc = "Show Go test coverage" })
+				vim.keymap.set(
+					"n",
+					"<leader>gct",
+					"<cmd>GoCoverageToggle<CR>",
+					{ silent = true, desc = "Show Go test coverage" }
+				)
 			end,
 		},
 
