@@ -182,4 +182,45 @@ return {
 			})
 		end,
 	},
+
+	-- Debugging
+	{
+		"mfussenegger/nvim-dap",
+		dependencies = {
+			"rcarriga/nvim-dap-ui",
+			"nvim-neotest/nvim-nio",
+		},
+		config = function()
+			-- Basic nvim-dap setup
+			local dap = require("dap")
+			local dapui = require("dapui")
+
+			-- Initialize dap-ui
+			dapui.setup()
+
+			-- Automatically open and close dapui when debugging starts and ends
+			dap.listeners.after.event_initialized["dapui_config"] = function()
+				dapui.open()
+			end
+			dap.listeners.before.event_terminated["dapui_config"] = function()
+				dapui.close()
+			end
+			dap.listeners.before.event_exited["dapui_config"] = function()
+				dapui.close()
+			end
+
+			-- Set up keymappings for debugging
+			vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Toggle Breakpoint" })
+			vim.keymap.set("n", "<leader>dc", dap.continue, { desc = "Start/Continue Debugging" })
+			vim.keymap.set("n", "<leader>dn", dap.step_over, { desc = "Step Over" })
+			vim.keymap.set("n", "<leader>di", dap.step_into, { desc = "Step Into" })
+			vim.keymap.set("n", "<leader>do", dap.step_out, { desc = "Step Out" })
+			vim.keymap.set("n", "<leader>dr", function()
+				dap.repl.open()
+			end, { desc = "Open REPL" })
+
+			-- Add UI toggle
+			vim.keymap.set("n", "<leader>du", dapui.toggle, { desc = "Toggle Debug UI" })
+		end,
+	},
 }

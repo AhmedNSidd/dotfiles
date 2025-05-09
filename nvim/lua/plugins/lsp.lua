@@ -28,7 +28,7 @@ return {
 
 			-- Setup mason & mason-lspconfig
 			require("mason").setup()
-			require("mason-lspconfig").setup({ ensure_installed = { "gopls" } })
+			require("mason-lspconfig").setup({ ensure_installed = { "gopls", "jdtls" } })
 
 			-- Loop over servers and apply common settings
 			local lspconfig = require("lspconfig")
@@ -165,7 +165,15 @@ return {
 		config = function()
 			require("mason").setup()
 			require("mason-null-ls").setup({
-				ensure_installed = { "stylua", "buf", "golangci_lint", "golines", "scalafmt" },
+				ensure_installed = {
+					"stylua",
+					"buf",
+					"golangci_lint",
+					"golines",
+					"checkstyle",
+					"google_java_format",
+					"scalafmt",
+				},
 				automatic_installation = true,
 				automatic_setup = false,
 			})
@@ -198,6 +206,15 @@ return {
 					null_ls.builtins.diagnostics.golangci_lint,
 					null_ls.builtins.formatting.golines.with({
 						extra_args = { "--max-len", "120", "--shorten-comments" },
+					}),
+
+					-- Java
+					null_ls.builtins.formatting.google_java_format,
+					null_ls.builtins.diagnostics.checkstyle.with({
+						extra_args = {
+							"-c",
+							vim.fn.expand("~/.config/checkstyle/google_checks.xml"),
+						},
 					}),
 
 					-- Scala
