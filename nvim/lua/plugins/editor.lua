@@ -221,6 +221,31 @@ return {
 
 			-- Add UI toggle
 			vim.keymap.set("n", "<leader>du", dapui.toggle, { desc = "Toggle Debug UI" })
+
+			-- Terminate debugging
+			vim.keymap.set("n", "<leader>dT", function()
+				dap.terminate()
+				dapui.close()
+			end, { desc = "Terminate Debugging" })
 		end,
+	},
+
+	-- Plugin for giving me hints for my neovim keybindings
+	{
+		"folke/which-key.nvim",
+		event = "VeryLazy",
+		opts = {
+			-- your configuration comes here
+			-- or leave it empty to use the default settings
+		},
+		keys = {
+			{
+				"<leader>?",
+				function()
+					require("which-key").show({ global = false })
+				end,
+				desc = "Buffer Local Keymaps (which-key)",
+			},
+		},
 	},
 }

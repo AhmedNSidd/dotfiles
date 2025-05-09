@@ -32,5 +32,6 @@
   "vim-go": { "branch": "master", "commit": "59e208d5212b86c8afd69d8590f181594f859ddb" },
   "vim-oscyank": { "branch": "main", "commit": "d67d76b2f19b868b70a1cf33a779d71dc092cb30" },
   "vim-sleuth": { "branch": "master", "commit": "be69bff86754b1aa5adcbb527d7fcd1635a84080" },
+  "which-key.nvim": { "branch": "main", "commit": "370ec46f710e058c9c1646273e6b225acf47cbed" },
   "workspaces.nvim": { "branch": "master", "commit": "55a1eb6f5b72e07ee8333898254e113e927180ca" }
 }
