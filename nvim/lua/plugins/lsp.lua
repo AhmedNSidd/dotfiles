@@ -1,3 +1,5 @@
+local handlers = require("config.lsp_handlers")
+
 return {
 	-- Plugin for install and managing external tools (e.g. LSP servers)
 	{
@@ -20,31 +22,6 @@ return {
 		event = { "BufReadPre", "BufNewFile" },
 		dependencies = { "mason.nvim", "mason-lspconfig.nvim", "hrsh7th/cmp-nvim-lsp" },
 		config = function()
-			-- Define a common `on_attach` function for keymaps & formatting
-			local on_attach = function(client, bufnr)
-				local bufmap = function(mode, lhs, rhs, desc)
-					vim.keymap.set(mode, lhs, rhs, { buffer = bufnr, desc = desc })
-				end
-
-				-- Common keymaps
-				bufmap("n", "gd", vim.lsp.buf.definition, "Go to Definition")
-				bufmap("n", "K", vim.lsp.buf.hover, "Hover Documentation")
-				bufmap("n", "gi", vim.lsp.buf.implementation, "Go to Implementation")
-				bufmap("n", "<leader>rn", vim.lsp.buf.rename, "Rename Symbol")
-				bufmap("n", "[d", vim.diagnostic.goto_prev, "Prev Diagnostic")
-				bufmap("n", "]d", vim.diagnostic.goto_next, "Next Diagnostic")
-				bufmap("n", "<leader>x", vim.diagnostic.open_float, "Show diagnostics")
-
-				-- Define a binding to toggle on/off the diagnostic signs
-				-- (used to quickly check the in-line git diffs of certain lines)
-				local diagnostic_signs_enabled = true
-				function _G.toggle_diagnostic_signs()
-					diagnostic_signs_enabled = not diagnostic_signs_enabled
-					vim.diagnostic.config({ signs = diagnostic_signs_enabled })
-				end
-				vim.keymap.set("n", "<leader>td", _G.toggle_diagnostic_signs, { desc = "Toggle LSP diagnostic signs" })
-			end
-
 			-- Hook up LSP servers with cmp-nvim-lsp
 			local capabilities = vim.lsp.protocol.make_client_capabilities()
 			capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
@@ -57,7 +34,7 @@ return {
 			local lspconfig = require("lspconfig")
 			for _, server in ipairs({ "gopls" }) do
 				lspconfig[server].setup({
-					on_attach = on_attach,
+					on_attach = handlers.on_attach,
 					capabilities = capabilities,
 					-- you can override per-server settings here:
 					-- settings = server == "gopls" and { gopls = { gofumpt = true } } or nil,

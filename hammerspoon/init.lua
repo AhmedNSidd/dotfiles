@@ -4,44 +4,86 @@ local hotkey = require("hs.hotkey")
 local window = require("hs.window")
 local screen = require("hs.screen")
 
--- Function to move windows to screen by name
-function moveWindowToScreenByName(win, screenName)
-	local screens = screen.allScreens()
+-- Function to get all screens sorted from left to right based on x-coordinate
+function getScreensSortedLeftToRight()
+	local allScreens = screen.allScreens()
+	table.sort(allScreens, function(a, b)
+		return a:frame().x < b:frame().x
+	end)
+	return allScreens
+end
 
-	for i, scr in ipairs(screens) do
-		print("Screen " .. i .. ": " .. scr:name())
-		if scr:name():find(screenName) then
-			local wasFS = win:isFullScreen()
+-- Function to move window to another screen and handle fullscreen state
+function moveWindowToScreen(win, targetScreen)
+	if not win or not targetScreen then
+		return
+	end
 
-			if wasFS then
-				-- If fullscreen, exit and wait before moving
-				win:setFullScreen(false)
-				hs.timer.doAfter(0.6, function()
-					win:moveToScreen(scr)
-					win:setFullScreen(true)
-				end)
-			else
-				-- If not fullscreen, move immediately
-				win:moveToScreen(scr)
-			end
+	local wasFS = win:isFullScreen()
 
-			return
-		end
+	if wasFS then
+		-- If fullscreen, exit and wait before moving
+		win:setFullScreen(false)
+		hs.timer.doAfter(0.6, function()
+			win:moveToScreen(targetScreen)
+			win:setFullScreen(true)
+		end)
+	else
+		-- If not fullscreen, move immediately
+		win:moveToScreen(targetScreen)
 	end
 end
 
--- Set up hotkeys for specific screens by name
-hotkey.bind({ "alt", "cmd" }, "left", function()
+-- Function to move window to screen on the left
+function moveWindowToLeftScreen()
 	local win = window.focusedWindow()
-	moveWindowToScreenByName(win, "27QHD240")
-end)
+	if not win then
+		return
+	end
 
-hotkey.bind({ "alt", "cmd" }, "up", function()
-	local win = window.focusedWindow()
-	moveWindowToScreenByName(win, "DELL P2722HE")
-end)
+	local currentScreen = win:screen()
+	local sortedScreens = getScreensSortedLeftToRight()
 
-hotkey.bind({ "alt", "cmd" }, "right", function()
+	-- Find the index of the current screen
+	local currentIndex = 0
+	for i, scr in ipairs(sortedScreens) do
+		if scr:id() == currentScreen:id() then
+			currentIndex = i
+			break
+		end
+	end
+
+	-- Move to the screen on the left if it exists
+	if currentIndex > 1 then
+		moveWindowToScreen(win, sortedScreens[currentIndex - 1])
+	end
+end
+
+-- Function to move window to screen on the right
+function moveWindowToRightScreen()
 	local win = window.focusedWindow()
-	moveWindowToScreenByName(win, "Retina Display")
-end)
+	if not win then
+		return
+	end
+
+	local currentScreen = win:screen()
+	local sortedScreens = getScreensSortedLeftToRight()
+
+	-- Find the index of the current screen
+	local currentIndex = 0
+	for i, scr in ipairs(sortedScreens) do
+		if scr:id() == currentScreen:id() then
+			currentIndex = i
+			break
+		end
+	end
+
+	-- Move to the screen on the right if it exists
+	if currentIndex < #sortedScreens then
+		moveWindowToScreen(win, sortedScreens[currentIndex + 1])
+	end
+end
+
+-- Set up hotkeys for moving to physical left and right screens
+hotkey.bind({ "alt", "cmd" }, "left", moveWindowToLeftScreen)
+hotkey.bind({ "alt", "cmd" }, "right", moveWindowToRightScreen)

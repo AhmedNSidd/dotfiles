@@ -20,5 +20,6 @@ require("lazy").setup({
 	spec = {
 		-- Import all your plugin categories
 		{ import = "plugins" },
+		{ import = "plugins.lang" }, -- loads lua/plugins/lang/*.lua
 	},
 })
