@@ -15,6 +15,28 @@ return {
 					-- Path to lombok jar
 					local lombok_path = home .. "/.local/share/java/lombok.jar"
 
+					-- Find debug bundles from Mason installation
+					local bundles = {}
+
+					-- Java Debug Adapter
+					local java_debug_path = home .. "/.local/share/nvim/mason/packages/java-debug-adapter"
+					local debug_bundles =
+						vim.split(vim.fn.glob(java_debug_path .. "/extension/server/com.microsoft.java.debug.plugin-*.jar"), "\n")
+					for _, bundle in ipairs(debug_bundles) do
+						if bundle ~= "" then
+							table.insert(bundles, bundle)
+						end
+					end
+
+					-- Java Test
+					local java_test_path = home .. "/.local/share/nvim/mason/packages/java-test"
+					local test_bundles = vim.split(vim.fn.glob(java_test_path .. "/extension/server/*.jar"), "\n")
+					for _, bundle in ipairs(test_bundles) do
+						if bundle ~= "" then
+							table.insert(bundles, bundle)
+						end
+					end
+
 					local config = {
 						cmd = {
 							vim.fn.expand("$HOME") .. "/.local/share/nvim/mason/bin/jdtls",
@@ -26,13 +48,7 @@ return {
 						on_attach = handlers.on_attach,
 						capabilities = capabilities,
 						init_options = {
-							bundles = {
-								vim.fn.glob(
-									home
-										.. "/.local/share/nvim/java-debug/com.microsoft.java.debug.plugin/target/com.microsoft.java.debug.plugin-*.jar",
-									1
-								),
-							},
+							bundles = bundles,
 						},
 					}
 					require("jdtls").start_or_attach(config)

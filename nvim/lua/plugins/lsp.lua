@@ -4,7 +4,12 @@ return {
 	-- Plugin for install and managing external tools (e.g. LSP servers)
 	{
 		"williamboman/mason.nvim",
-		opts = {},
+		opts = {
+			ensure_installed = {
+				"java-debug-adapter",
+				"java-test",
+			},
+		},
 		cmd = "Mason",
 	},
 
