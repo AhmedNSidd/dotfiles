@@ -33,17 +33,38 @@ return {
 
 			-- Setup mason & mason-lspconfig
 			require("mason").setup()
-			require("mason-lspconfig").setup({ ensure_installed = { "gopls", "jdtls" } })
-
+			require("mason-lspconfig").setup({
+				ensure_installed = { "gopls", "jdtls", "lua_ls" },
+				automatic_enable = false,
+			})
 			-- Loop over servers and apply common settings
 			local lspconfig = require("lspconfig")
-			for _, server in ipairs({ "gopls" }) do
-				lspconfig[server].setup({
-					on_attach = handlers.on_attach,
-					capabilities = capabilities,
-					-- you can override per-server settings here:
-					-- settings = server == "gopls" and { gopls = { gofumpt = true } } or nil,
-				})
+			for _, server in ipairs({ "gopls", "lua_ls" }) do
+				if server == "lua_ls" then
+					lspconfig.lua_ls.setup({
+						on_attach = handlers.on_attach,
+						capabilities = capabilities,
+						settings = {
+							Lua = {
+								diagnostics = {
+									globals = { "vim" },
+								},
+								workspace = {
+									-- Make the server aware of Neovim runtime files
+									library = vim.api.nvim_get_runtime_file("", true),
+									checkThirdParty = false, -- Avoid issues with third-party libraries in your Neovim config
+								},
+							},
+						},
+					})
+				else
+					lspconfig[server].setup({
+						on_attach = handlers.on_attach,
+						capabilities = capabilities,
+						-- you can override per-server settings here:
+						-- settings = server == "gopls" and { gopls = { gofumpt = true } } or nil,
+					})
+				end
 			end
 		end,
 	},

@@ -81,7 +81,7 @@ return {
 		config = function()
 			require("toggleterm").setup({
 				open_mapping = [[<C-\>]],
-				direction = "float",
+				direction = "horizontal",
 				on_open = function(term)
 					vim.api.nvim_buf_set_keymap(term.bufnr, "t", "<Esc>", "<C-\\><C-n>", { noremap = true })
 				end,
@@ -149,23 +149,37 @@ return {
 	-- AI Assistant
 	{
 		"olimorris/codecompanion.nvim",
-		opts = {},
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"nvim-treesitter/nvim-treesitter",
 			"hrsh7th/nvim-cmp",
+			"ravitemer/codecompanion-history.nvim",
+			--"CopilotC-Nvim/CopilotChat.nvim", -- for copilot integration
 		},
 		config = function()
 			require("codecompanion").setup({
+				strategies = {
+					chat = {
+						roles = {
+							llm = function(adapter)
+								return adapter.model.name
+							end,
+							user = "Ahmed",
+						},
+					},
+				},
+
 				cmp = {
 					enabled = true,
 				},
 				display = {
 					chat = {
 						window = {
-							layout = "float",
-							width = 0.85,
+							layout = "vertical",
+							width = 0.25,
 						},
+						auto_scroll = false,
+						intro_message = "What are your commands?",
 					},
 				},
 				adapters = {
@@ -179,6 +193,15 @@ return {
 						})
 					end,
 				},
+				--extensions = {
+				--	history = {
+				--		enabled = true,
+				--		opts = {
+				--			continue_last_chat = true,
+				--			delete_on_clearing_chat = false,
+				--		},
+				--	},
+				--},
 			})
 		end,
 	},
@@ -211,16 +234,18 @@ return {
 
 			-- Set up keymappings for debugging
 			vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Toggle Breakpoint" })
-			vim.keymap.set("n", "<leader>dc", dap.continue, { desc = "Start/Continue Debugging" })
-			vim.keymap.set("n", "<leader>dn", dap.step_over, { desc = "Step Over" })
-			vim.keymap.set("n", "<leader>di", dap.step_into, { desc = "Step Into" })
-			vim.keymap.set("n", "<leader>do", dap.step_out, { desc = "Step Out" })
+			vim.keymap.set("n", "<leader>dc", dap.continue, { desc = "Start/Continue Debuging" })
+			vim.keymap.set("n", "<C-l>", dap.step_over, { desc = "Step Over" })
+			vim.keymap.set("n", "<C-j>", dap.step_into, { desc = "Step Into" })
+			vim.keymap.set("n", "<C-k>", dap.step_out, { desc = "Step Out" })
 			vim.keymap.set("n", "<leader>dr", function()
 				dap.repl.open()
 			end, { desc = "Open REPL" })
 
 			-- Add UI toggle
-			vim.keymap.set("n", "<leader>du", dapui.toggle, { desc = "Toggle Debug UI" })
+			vim.keymap.set("n", "<leader>du", function()
+				dapui.toggle({ reset = true })
+			end, { desc = "Toggle Debug UI" })
 
 			-- Terminate debugging
 			vim.keymap.set("n", "<leader>dT", function()
@@ -235,6 +260,7 @@ return {
 		"folke/which-key.nvim",
 		event = "VeryLazy",
 		opts = {
+			delay = 2000,
 			-- your configuration comes here
 			-- or leave it empty to use the default settings
 		},
@@ -247,5 +273,111 @@ return {
 				desc = "Buffer Local Keymaps (which-key)",
 			},
 		},
+	},
+
+	-- GitHub in Neovim plugin
+	{
+		dir = "/Users/ahsiddiqui/Desktop/workspace/projects/personal/octo.nvim",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-telescope/telescope.nvim",
+			"nvim-tree/nvim-web-devicons",
+		},
+		config = function()
+			require("octo").setup({
+				--use_local_fs = true,
+			})
+			-- Create keymap to view PR file in a new tab
+			vim.keymap.set("n", "<localleader>pe", function()
+				-- capture both side and path
+				local ok, side, path = pcall(require("octo.utils").get_split_and_path, vim.api.nvim_get_current_buf())
+				if not ok or not path then
+					vim.notify("Octo: no PR file under cursor", vim.log.levels.ERROR)
+					return
+				end
+
+				-- open the reviewed file in a new tab
+				vim.cmd("tabedit " .. path)
+
+				-- now that we're in the file buffer, allow edits
+				-- (unset readonly if present, and turn modifiable on)
+				vim.api.nvim_buf_set_option(0, "readonly", false)
+				vim.api.nvim_buf_set_option(0, "modifiable", true)
+			end, {
+				desc = "Octo: open reviewed file in new tab (and allow edits)",
+				silent = true,
+			})
+		end,
+	},
+
+	-- Debug Lua plugins with DAP
+	{
+		"jbyuki/one-small-step-for-vimkind",
+		dependencies = { "mfussenegger/nvim-dap" },
+		config = function()
+			local dap = require("dap")
+			-- Define the adapter
+			dap.adapters.nlua = function(callback, config)
+				callback({
+					type = "server",
+					host = config.host or "127.0.0.1",
+					port = config.port or 8086,
+				})
+			end
+
+			-- Define how to attach/launch Lua debug sessions
+			dap.configurations.lua = {
+				{
+					-- To debug a standalone Lua file:
+					name = "Launch file",
+					type = "nlua",
+					request = "launch",
+					program = "${file}",
+				},
+				{
+					-- To attach to a running Neovim instance
+					name = "Attach to Neovim",
+					type = "nlua",
+					request = "attach",
+					host = "127.0.0.1",
+					port = 8086,
+				},
+			}
+
+			-- helper command to start the debug server
+			vim.api.nvim_create_user_command("LuaDebugStart", function()
+				require("osv").launch({ port = 8086 })
+			end, { desc = "Start Lua DAP server on port 8086" })
+
+			-- helper command to stop the debug server
+			vim.api.nvim_create_user_command("LuaDebugStop", function()
+				require("osv").stop()
+			end, { desc = "Start Lua DAP server on port 8086" })
+		end,
+	},
+
+	{
+		"OXY2DEV/markview.nvim",
+		lazy = false,
+		opts = {
+			preview = {
+				filetypes = { "markdown", "codecompanion" },
+				ignore_buftypes = {},
+			},
+		},
+	},
+
+	{
+		"nvim-treesitter/nvim-treesitter",
+		run = ":TSUpdate",
+		config = function()
+			require("nvim-treesitter.configs").setup({
+				ensure_installed = { "markdown", "markdown_inline" },
+				highlight = {
+					enable = true,
+					additional_vim_regex_highlighting = { "markdown" },
+				},
+			})
+		end,
 	},
 }

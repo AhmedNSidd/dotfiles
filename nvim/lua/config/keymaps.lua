@@ -14,7 +14,7 @@ vim.keymap.set("n", "<leader>wp", function()
 end, { desc = "Switch project" })
 
 -- Toggle CodeCompanion chat window
-vim.keymap.set("n", "<leader>cc", ":CodeCompanionChat Toggle<CR>", { desc = "Toggle CodeCompanion chat" })
+vim.keymap.set("n", "<C-`>", ":CodeCompanionChat Toggle<CR>", { desc = "Toggle CodeCompanion chat" })
 
 -- Copy selected text
 vim.keymap.set("v", "<leader>c", "<Plug>OSCYankVisual", { noremap = false, desc = "Copy selection to clipboard" })
