@@ -8,6 +8,7 @@ return {
 			ensure_installed = {
 				"java-debug-adapter",
 				"java-test",
+				"debugpy", -- debugger for Python
 			},
 		},
 		cmd = "Mason",
@@ -34,12 +35,12 @@ return {
 			-- Setup mason & mason-lspconfig
 			require("mason").setup()
 			require("mason-lspconfig").setup({
-				ensure_installed = { "gopls", "jdtls", "lua_ls" },
+				ensure_installed = { "gopls", "jdtls", "lua_ls", "pyright", "texlab" },
 				automatic_enable = false,
 			})
 			-- Loop over servers and apply common settings
 			local lspconfig = require("lspconfig")
-			for _, server in ipairs({ "gopls", "lua_ls" }) do
+			for _, server in ipairs({ "gopls", "lua_ls", "pyright" }) do
 				if server == "lua_ls" then
 					lspconfig.lua_ls.setup({
 						on_attach = handlers.on_attach,
@@ -66,6 +67,25 @@ return {
 					})
 				end
 			end
+			-- Add texlab configuration
+			lspconfig.texlab.setup({
+				on_attach = handlers.on_attach,
+				capabilities = capabilities,
+				settings = {
+					texlab = {
+						build = {
+							executable = "latexmk",
+							args = { "-pdf", "-interaction=nonstopmode", "-synctex=1", "-outdir=out" },
+							onSave = true,
+						},
+						forwardSearch = {
+							executable = "skim", -- Change to "skim" on macOS
+							args = { "--synctex-forward", "%l:1:%f", "%p" },
+						},
+						chktex = { onOpenAndSave = true },
+					},
+				},
+			})
 		end,
 	},
 
@@ -199,6 +219,7 @@ return {
 					"checkstyle",
 					"google_java_format",
 					"scalafmt",
+					"latexindent",
 				},
 				automatic_installation = true,
 				automatic_setup = false,
@@ -209,7 +230,10 @@ return {
 	-- Plugin used to handle linting & formatting
 	{
 		"nvimtools/none-ls.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvimtools/none-ls-extras.nvim",
+		},
 		config = function()
 			local null_ls = require("null-ls")
 			null_ls.setup({
@@ -245,19 +269,33 @@ return {
 
 					-- Scala
 					null_ls.builtins.formatting.scalafmt,
+
+					-- LaTeX
+					require("none-ls.formatting.latexindent"),
 				},
 				on_attach = function(client, bufnr)
 					if client.supports_method("textDocument/formatting") then
+						-- default on
+						vim.api.nvim_buf_set_var(bufnr, "autoformat", true)
+
+						-- command to toggle autoformat globally
+						vim.api.nvim_buf_create_user_command(bufnr, "ToggleAutoFormat", function()
+							vim.g.autoformat_enabled = not vim.g.autoformat_enabled
+							print("global autoformat =", vim.g.autoformat_enabled)
+						end, { desc = "Toggle LSP autoformat on save globally" })
+
+						-- autoformat on save if both global and buffer flags are true
 						vim.api.nvim_create_autocmd("BufWritePre", {
 							buffer = bufnr,
 							callback = function()
-								vim.lsp.buf.format({
-									bufnr = bufnr,
-									timeout_ms = 10000,
-									filter = function(c)
-										return c.name == "null-ls"
-									end,
-								})
+								if vim.g.autoformat_enabled and vim.b.autoformat then
+									vim.lsp.buf.format({
+										bufnr = bufnr,
+										filter = function(c)
+											return c.name == "null-ls"
+										end,
+									})
+								end
 							end,
 						})
 					end

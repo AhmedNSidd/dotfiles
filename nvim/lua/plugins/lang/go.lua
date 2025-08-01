@@ -5,9 +5,10 @@ return {
 		ft = { "go", "gomod" },
 		init = function()
 			-- Disable vim-go's formatting features in favor of LSP
-			vim.g.go_fmt_autosave = 0
-			vim.g.go_fmt_command = "gopls"
-			vim.g.go_gopls_enabled = 0 -- Disable gopls in vim-go as we're using lspconfig
+			vim.g.go_fmt_autosave = 1
+			vim.g.go_fmt_command = "golines"
+			vim.g.go_fmt_options = "--shorten-comments"
+			vim.g.go_gopls_enabled = 1 -- Disable gopls in vim-go as we're using lspconfig
 			vim.g.go_imports_autosave = 0 -- Disable auto imports
 			vim.g.go_mod_fmt_autosave = 0 -- Disable go.mod formatting
 			vim.g.go_doc_keywordprg_enabled = 0 -- Disable K for GoDoc

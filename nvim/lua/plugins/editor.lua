@@ -75,18 +75,52 @@ return {
 	},
 
 	-- Plugin for toggling a terminal window
+	--{
+	--	"akinsho/toggleterm.nvim",
+	--	version = "*",
+	--	config = function()
+	--		require("toggleterm").setup({
+	--			open_mapping = [[<C-\>]],
+	--			direction = "horizontal",
+	--			on_open = function(term)
+	--				vim.api.nvim_buf_set_keymap(term.bufnr, "t", "<Esc>", "<C-\\><C-n>", { noremap = true })
+	--			end,
+	--		})
+	--	end,
+	--},
+
+	--{
+	--	"nvzone/floaterm",
+	--	dependencies = "nvzone/volt",
+	--	opts = {},
+	--	cmd = "FloatermToggle",
+	--	config = function() end,
+	--},
 	{
-		"akinsho/toggleterm.nvim",
-		version = "*",
-		config = function()
-			require("toggleterm").setup({
-				open_mapping = [[<C-\>]],
-				direction = "horizontal",
-				on_open = function(term)
-					vim.api.nvim_buf_set_keymap(term.bufnr, "t", "<Esc>", "<C-\\><C-n>", { noremap = true })
+		"CRAG666/betterTerm.nvim",
+		keys = {
+			{
+				mode = { "n", "t" },
+				"<C-\\>",
+				function()
+					require("betterTerm").open()
 				end,
-			})
-		end,
+				desc = "Open BetterTerm 0",
+			},
+			{
+				"<leader>tt",
+				function()
+					require("betterTerm").select()
+				end,
+				desc = "Select terminal",
+			},
+		},
+		opts = {
+			position = "bot",
+			size = 15,
+			index_base = 1,
+			--jump_tab_mapping = "<A-$tab>",
+		},
 	},
 
 	-- Plugin for comparing diffs for two parts of the same file
@@ -146,64 +180,161 @@ return {
 		end,
 	},
 
+	--{
+	--	"ravitemer/mcphub.nvim",
+	--	dependencies = {
+	--		"nvim-lua/plenary.nvim",
+	--	},
+	--	build = "npm install -g mcp-hub@latest",
+	--	config = function()
+	--		require("mcphub").setup({
+	--			config = vim.fn.expand("~/.config/mcphub/servers.json"), -- Absolute path to MCP Servers config file (will create if not exists)
+	--			port = 37373, -- The port `mcp-hub` server listens to
+	--		})
+	--	end,
+	--},
+
 	-- AI Assistant
+	--{
+	--	"olimorris/codecompanion.nvim",
+	--	dependencies = {
+	--		"nvim-lua/plenary.nvim",
+	--		"nvim-treesitter/nvim-treesitter",
+	--		"hrsh7th/nvim-cmp",
+	--		"github/copilot.vim", -- for copilot integration
+	--		"ravitemer/codecompanion-history.nvim",
+	--		--"ravitemer/mcphub.nvim",
+	--	},
+	--	config = function()
+	--		-- Disable Copilot autocompletion while keeping API available
+	--		vim.g.copilot_enabled = 0
+
+	--		require("codecompanion").setup({
+	--			strategies = {
+	--				chat = {
+	--					roles = {
+	--						llm = function(adapter)
+	--							return adapter.model.name
+	--						end,
+	--						user = "Ahmed",
+	--					},
+	--				},
+	--			},
+
+	--			cmp = {
+	--				enabled = true,
+	--			},
+	--			display = {
+	--				chat = {
+	--					window = {
+	--						layout = "vertical",
+	--						width = 0.25,
+	--					},
+	--					auto_scroll = false,
+	--					intro_message = "What are your commands?",
+	--				},
+	--			},
+	--			adapters = {
+	--				copilot = function()
+	--					return require("codecompanion.adapters").extend("copilot", {
+	--						schema = {
+	--							model = {
+	--								default = "claude-3.7-sonnet-thought",
+	--							},
+	--						},
+	--					})
+	--				end,
+	--			},
+	--			extensions = {
+	--				history = {
+	--					enabled = true,
+	--					opts = {
+	--						continue_last_chat = false,
+	--						delete_on_clearing_chat = false,
+	--						-- Add this callback to reset cmp after opening historical chat
+	--						on_open_history = function()
+	--							vim.schedule(function()
+	--								require("cmp").reset()
+	--							end)
+	--						end,
+	--					},
+	--				},
+	--				--mcphub = {
+	--				--	callback = "mcphub.extensions.codecompanion",
+	--				--	opts = {
+	--				--		-- MCP Tools
+	--				--		make_tools = true, -- Make individual tools (@server__tool) and server groups (@server) from MCP servers
+	--				--		show_server_tools_in_chat = true, -- Show individual tools in chat completion (when make_tools=true)
+	--				--		add_mcp_prefix_to_tool_names = false, -- Add mcp__ prefix (e.g `@mcp__github`, `@mcp__neovim__list_issues`)
+	--				--		show_result_in_chat = true, -- Show tool results directly in chat buffer
+	--				--		format_tool = nil, -- function(tool_name:string, tool: CodeCompanion.Agent.Tool) : string Function to format tool names to show in the chat buffer
+	--				--		-- MCP Resources
+	--				--		make_vars = true, -- Convert MCP resources to #variables for prompts
+	--				--		-- MCP Prompts
+	--				--		make_slash_commands = true, -- Add MCP prompts as /slash commands
+	--				--	},
+	--				--},
+	--			},
+	--		})
+	--	end,
+	--},
 	{
-		"olimorris/codecompanion.nvim",
+		"yetone/avante.nvim",
+		build = vim.fn.has("win32") ~= 0 and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
+			or "make",
+		event = "VeryLazy",
+		version = false,
+		opts = {
+			provider = "copilot",
+			selector = {
+				provider = "telescope",
+				-- Exclude Oil from auto-selection
+				exclude_auto_select = { "oil" },
+			},
+			windows = {
+				edit = {
+					start_insert = false,
+				},
+				ask = {
+					start_insert = false,
+				},
+				input = {
+					height = 13,
+				},
+			},
+		},
 		dependencies = {
 			"nvim-lua/plenary.nvim",
-			"nvim-treesitter/nvim-treesitter",
-			"hrsh7th/nvim-cmp",
-			"ravitemer/codecompanion-history.nvim",
-			--"CopilotC-Nvim/CopilotChat.nvim", -- for copilot integration
+			"MunifTanjim/nui.nvim",
+			"nvim-telescope/telescope.nvim", -- for file_selector provider telescope
+			"hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
+			"zbirenbaum/copilot.lua", -- for providers='copilot'
+			{
+				-- support for image pasting
+				"HakonHarnes/img-clip.nvim",
+				event = "VeryLazy",
+				opts = {
+					-- recommended settings
+					default = {
+						embed_image_as_base64 = false,
+						prompt_for_file_name = false,
+						drag_and_drop = {
+							insert_mode = true,
+						},
+						-- required for Windows users
+						use_absolute_path = true,
+					},
+				},
+			},
+			{
+				-- Make sure to set this up properly if you have lazy=true
+				"MeanderingProgrammer/render-markdown.nvim",
+				opts = {
+					file_types = { "markdown", "Avante" },
+				},
+				ft = { "markdown", "Avante" },
+			},
 		},
-		config = function()
-			require("codecompanion").setup({
-				strategies = {
-					chat = {
-						roles = {
-							llm = function(adapter)
-								return adapter.model.name
-							end,
-							user = "Ahmed",
-						},
-					},
-				},
-
-				cmp = {
-					enabled = true,
-				},
-				display = {
-					chat = {
-						window = {
-							layout = "vertical",
-							width = 0.25,
-						},
-						auto_scroll = false,
-						intro_message = "What are your commands?",
-					},
-				},
-				adapters = {
-					copilot = function()
-						return require("codecompanion.adapters").extend("copilot", {
-							schema = {
-								model = {
-									default = "o4-mini",
-								},
-							},
-						})
-					end,
-				},
-				--extensions = {
-				--	history = {
-				--		enabled = true,
-				--		opts = {
-				--			continue_last_chat = true,
-				--			delete_on_clearing_chat = false,
-				--		},
-				--	},
-				--},
-			})
-		end,
 	},
 
 	-- Debugging
@@ -218,6 +349,14 @@ return {
 			local dap = require("dap")
 			local dapui = require("dapui")
 
+			-- only close on _successful_ termination, not errors
+			--dap.listeners.after.event_terminated["dapui_config"] = function()
+			--		dapui.close()
+			--	end
+
+			-- don’t auto‐close on errors
+			-- dap.listeners.before.event_exited["dapui_config"] = nil
+
 			-- Initialize dap-ui
 			dapui.setup()
 
@@ -225,12 +364,12 @@ return {
 			dap.listeners.after.event_initialized["dapui_config"] = function()
 				dapui.open()
 			end
-			dap.listeners.before.event_terminated["dapui_config"] = function()
-				dapui.close()
-			end
-			dap.listeners.before.event_exited["dapui_config"] = function()
-				dapui.close()
-			end
+			--dap.listeners.before.event_terminated["dapui_config"] = function()
+			--	dapui.close()
+			--end
+			--dap.listeners.before.event_exited["dapui_config"] = function()
+			--	dapui.close()
+			--end
 
 			-- Set up keymappings for debugging
 			vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Toggle Breakpoint" })
@@ -277,7 +416,8 @@ return {
 
 	-- GitHub in Neovim plugin
 	{
-		dir = "/Users/ahsiddiqui/Desktop/workspace/projects/personal/octo.nvim",
+		"pwntester/octo.nvim",
+		--dir = "/Users/ahsiddiqui/Desktop/workspace/projects/personal/octo.nvim",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"nvim-telescope/telescope.nvim",
@@ -311,6 +451,7 @@ return {
 	},
 
 	-- Debug Lua plugins with DAP
+	-- TODO: maybe move this to a separate lang/lua.lua file?
 	{
 		"jbyuki/one-small-step-for-vimkind",
 		dependencies = { "mfussenegger/nvim-dap" },
@@ -353,31 +494,6 @@ return {
 			vim.api.nvim_create_user_command("LuaDebugStop", function()
 				require("osv").stop()
 			end, { desc = "Start Lua DAP server on port 8086" })
-		end,
-	},
-
-	{
-		"OXY2DEV/markview.nvim",
-		lazy = false,
-		opts = {
-			preview = {
-				filetypes = { "markdown", "codecompanion" },
-				ignore_buftypes = {},
-			},
-		},
-	},
-
-	{
-		"nvim-treesitter/nvim-treesitter",
-		run = ":TSUpdate",
-		config = function()
-			require("nvim-treesitter.configs").setup({
-				ensure_installed = { "markdown", "markdown_inline" },
-				highlight = {
-					enable = true,
-					additional_vim_regex_highlighting = { "markdown" },
-				},
-			})
 		end,
 	},
 }

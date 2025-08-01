@@ -14,7 +14,10 @@ vim.keymap.set("n", "<leader>wp", function()
 end, { desc = "Switch project" })
 
 -- Toggle CodeCompanion chat window
-vim.keymap.set("n", "<C-`>", ":CodeCompanionChat Toggle<CR>", { desc = "Toggle CodeCompanion chat" })
+vim.keymap.set("n", "<C-`>", ":AvanteToggle<CR>", { desc = "Toggle Avante chat" })
 
 -- Copy selected text
 vim.keymap.set("v", "<leader>c", "<Plug>OSCYankVisual", { noremap = false, desc = "Copy selection to clipboard" })
+
+-- Terminal-mode mapping: press <Esc> in terminal to enter Terminal-Normal mode
+vim.api.nvim_set_keymap("t", "<Esc>", "<C-\\><C-n>", { noremap = true })
