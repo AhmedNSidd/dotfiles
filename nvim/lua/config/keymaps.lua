@@ -19,8 +19,8 @@ vim.keymap.set("n", "<C-`>", ":AvanteToggle<CR>", { desc = "Toggle Avante chat" 
 -- Copy selected text
 vim.keymap.set("v", "<leader>c", "<Plug>OSCYankVisual", { noremap = false, desc = "Copy selection to clipboard" })
 
--- Terminal-mode mapping: press <Esc> in terminal to enter Terminal-Normal mode
-vim.api.nvim_set_keymap("t", "<Esc>", "<C-\\><C-n>", { noremap = true })
+-- Terminal-mode mapping: press <C-[> in terminal to enter Terminal-Normal mode
+vim.api.nvim_set_keymap("t", "<C-[>", "<C-\\><C-n>", { noremap = true })
 
 -- Global diagnostic keymaps (work for both LSP and none-ls diagnostics)
 vim.keymap.set("n", "<leader>x", vim.diagnostic.open_float, { desc = "Show diagnostics" })

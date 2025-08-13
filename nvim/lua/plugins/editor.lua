@@ -278,64 +278,64 @@ return {
 	--		})
 	--	end,
 	--},
-	{
-		"yetone/avante.nvim",
-		build = vim.fn.has("win32") ~= 0 and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
-			or "make",
-		event = "VeryLazy",
-		version = false,
-		opts = {
-			provider = "copilot",
-			selector = {
-				provider = "telescope",
-				-- Exclude Oil from auto-selection
-				exclude_auto_select = { "oil" },
-			},
-			windows = {
-				edit = {
-					start_insert = false,
-				},
-				ask = {
-					start_insert = false,
-				},
-				input = {
-					height = 13,
-				},
-			},
-		},
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-			"MunifTanjim/nui.nvim",
-			"nvim-telescope/telescope.nvim", -- for file_selector provider telescope
-			"hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
-			"zbirenbaum/copilot.lua", -- for providers='copilot'
-			{
-				-- support for image pasting
-				"HakonHarnes/img-clip.nvim",
-				event = "VeryLazy",
-				opts = {
-					-- recommended settings
-					default = {
-						embed_image_as_base64 = false,
-						prompt_for_file_name = false,
-						drag_and_drop = {
-							insert_mode = true,
-						},
-						-- required for Windows users
-						use_absolute_path = true,
-					},
-				},
-			},
-			{
-				-- Make sure to set this up properly if you have lazy=true
-				"MeanderingProgrammer/render-markdown.nvim",
-				opts = {
-					file_types = { "markdown", "Avante" },
-				},
-				ft = { "markdown", "Avante" },
-			},
-		},
-	},
+	--{
+	--	"yetone/avante.nvim",
+	--	build = vim.fn.has("win32") ~= 0 and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
+	--		or "make",
+	--	event = "VeryLazy",
+	--	version = false,
+	--	opts = {
+	--		provider = "copilot",
+	--		selector = {
+	--			provider = "telescope",
+	--			-- Exclude Oil from auto-selection
+	--			exclude_auto_select = { "oil" },
+	--		},
+	--		windows = {
+	--			edit = {
+	--				start_insert = false,
+	--			},
+	--			ask = {
+	--				start_insert = false,
+	--			},
+	--			input = {
+	--				height = 13,
+	--			},
+	--		},
+	--	},
+	--	dependencies = {
+	--		"nvim-lua/plenary.nvim",
+	--		"MunifTanjim/nui.nvim",
+	--		"nvim-telescope/telescope.nvim", -- for file_selector provider telescope
+	--		"hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
+	--		"zbirenbaum/copilot.lua", -- for providers='copilot'
+	--		{
+	--			-- support for image pasting
+	--			"HakonHarnes/img-clip.nvim",
+	--			event = "VeryLazy",
+	--			opts = {
+	--				-- recommended settings
+	--				default = {
+	--					embed_image_as_base64 = false,
+	--					prompt_for_file_name = false,
+	--					drag_and_drop = {
+	--						insert_mode = true,
+	--					},
+	--					-- required for Windows users
+	--					use_absolute_path = true,
+	--				},
+	--			},
+	--		},
+	--		{
+	--			-- Make sure to set this up properly if you have lazy=true
+	--			"MeanderingProgrammer/render-markdown.nvim",
+	--			opts = {
+	--				file_types = { "markdown", "Avante" },
+	--			},
+	--			ft = { "markdown", "Avante" },
+	--		},
+	--	},
+	--},
 
 	-- Debugging
 	{
