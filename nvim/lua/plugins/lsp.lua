@@ -220,6 +220,8 @@ return {
 					"google_java_format",
 					"scalafmt",
 					"latexindent",
+					"yamllint",
+					"yamlfmt",
 				},
 				automatic_installation = true,
 				automatic_setup = false,
@@ -244,9 +246,8 @@ return {
 					}),
 
 					-- YAML
-					null_ls.builtins.formatting.prettier.with({
-						filetypes = { "yaml", "yml" },
-					}),
+					null_ls.builtins.formatting.yamlfmt,
+					null_ls.builtins.diagnostics.yamllint,
 
 					-- Protobuf
 					null_ls.builtins.diagnostics.buf,

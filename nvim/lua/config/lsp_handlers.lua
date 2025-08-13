@@ -10,9 +10,7 @@ M.on_attach = function(client, bufnr)
 	bufmap("n", "K", vim.lsp.buf.hover, "Hover Documentation")
 	bufmap("n", "gi", vim.lsp.buf.implementation, "Go to Implementation")
 	bufmap("n", "<leader>rn", vim.lsp.buf.rename, "Rename Symbol")
-	bufmap("n", "[d", vim.diagnostic.goto_prev, "Prev Diagnostic")
-	bufmap("n", "]d", vim.diagnostic.goto_next, "Next Diagnostic")
-	bufmap("n", "<leader>x", vim.diagnostic.open_float, "Show diagnostics")
+	-- Diagnostic keymaps are now global (see keymaps.lua)
 
 	local diag_enabled = true
 	function _G.toggle_diagnostic_signs()
