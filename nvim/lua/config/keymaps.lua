@@ -22,8 +22,6 @@ vim.keymap.set("v", "<leader>c", "<Plug>OSCYankVisual", { noremap = false, desc 
 -- Terminal-mode mapping: press <Esc> in terminal to enter Terminal-Normal mode
 vim.api.nvim_set_keymap("t", "<Esc>", "<C-\\><C-n>", { noremap = true })
 
-vim.keymap.set("n", "<leader>cc", "<cmd>ClaudeCode<CR>", { desc = "Toggle Claude Code" })
-
 -- Global diagnostic keymaps (work for both LSP and none-ls diagnostics)
 vim.keymap.set("n", "<leader>x", vim.diagnostic.open_float, { desc = "Show diagnostics" })
 vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Prev Diagnostic" })
