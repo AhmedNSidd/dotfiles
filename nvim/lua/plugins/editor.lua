@@ -316,7 +316,14 @@ return {
 			"MunifTanjim/nui.nvim",
 			"nvim-telescope/telescope.nvim", -- for file_selector provider telescope
 			"hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
-			"zbirenbaum/copilot.lua", -- for providers='copilot'
+			{
+				"zbirenbaum/copilot.lua",
+				cmd = "Copilot",
+				event = "InsertEnter",
+				config = function()
+					require("copilot").setup({})
+				end,
+			},
 			{
 				-- support for image pasting
 				"HakonHarnes/img-clip.nvim",
