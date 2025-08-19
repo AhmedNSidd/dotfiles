@@ -35,12 +35,12 @@ return {
 			-- Setup mason & mason-lspconfig
 			require("mason").setup()
 			require("mason-lspconfig").setup({
-				ensure_installed = { "gopls", "jdtls", "lua_ls", "pyright", "texlab" },
+				ensure_installed = { "gopls", "jdtls", "lua_ls", "pyright", "texlab", "ts_ls" },
 				automatic_enable = false,
 			})
 			-- Loop over servers and apply common settings
 			local lspconfig = require("lspconfig")
-			for _, server in ipairs({ "gopls", "lua_ls", "pyright" }) do
+			for _, server in ipairs({ "gopls", "lua_ls", "pyright", "ts_ls" }) do
 				if server == "lua_ls" then
 					lspconfig.lua_ls.setup({
 						on_attach = handlers.on_attach,
@@ -222,6 +222,8 @@ return {
 					"latexindent",
 					"yamllint",
 					"yamlfmt",
+					"eslint_d",
+					"prettierd",
 				},
 				automatic_installation = true,
 				automatic_setup = false,
@@ -244,6 +246,10 @@ return {
 					null_ls.builtins.formatting.stylua.with({
 						extra_args = { "--indent-width", "2" },
 					}),
+
+					-- JavaScript/React
+					null_ls.builtins.formatting.prettierd,
+					null_ls.builtins.diagnostics.eslint_d,
 
 					-- YAML
 					null_ls.builtins.formatting.yamlfmt,

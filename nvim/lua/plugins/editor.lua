@@ -278,64 +278,72 @@ return {
 	--		})
 	--	end,
 	--},
-	--{
-	--	"yetone/avante.nvim",
-	--	build = vim.fn.has("win32") ~= 0 and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
-	--		or "make",
-	--	event = "VeryLazy",
-	--	version = false,
-	--	opts = {
-	--		provider = "copilot",
-	--		selector = {
-	--			provider = "telescope",
-	--			-- Exclude Oil from auto-selection
-	--			exclude_auto_select = { "oil" },
-	--		},
-	--		windows = {
-	--			edit = {
-	--				start_insert = false,
-	--			},
-	--			ask = {
-	--				start_insert = false,
-	--			},
-	--			input = {
-	--				height = 13,
-	--			},
-	--		},
-	--	},
-	--	dependencies = {
-	--		"nvim-lua/plenary.nvim",
-	--		"MunifTanjim/nui.nvim",
-	--		"nvim-telescope/telescope.nvim", -- for file_selector provider telescope
-	--		"hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
-	--		"zbirenbaum/copilot.lua", -- for providers='copilot'
-	--		{
-	--			-- support for image pasting
-	--			"HakonHarnes/img-clip.nvim",
-	--			event = "VeryLazy",
-	--			opts = {
-	--				-- recommended settings
-	--				default = {
-	--					embed_image_as_base64 = false,
-	--					prompt_for_file_name = false,
-	--					drag_and_drop = {
-	--						insert_mode = true,
-	--					},
-	--					-- required for Windows users
-	--					use_absolute_path = true,
-	--				},
-	--			},
-	--		},
-	--		{
-	--			-- Make sure to set this up properly if you have lazy=true
-	--			"MeanderingProgrammer/render-markdown.nvim",
-	--			opts = {
-	--				file_types = { "markdown", "Avante" },
-	--			},
-	--			ft = { "markdown", "Avante" },
-	--		},
-	--	},
-	--},
+	{
+		-- Use local development version for testing configurable height feature
+		"yetone/avante.nvim",
+		build = vim.fn.has("win32") ~= 0 and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
+			or "make",
+		event = "VeryLazy",
+		version = false,
+		config = function()
+			require("avante_lib").load()
+			require("avante").setup({
+				provider = "copilot",
+				selector = {
+					provider = "telescope",
+					-- Exclude Oil from auto-selection
+					exclude_auto_select = { "oil" },
+				},
+				windows = {
+					edit = {
+						start_insert = false,
+					},
+					ask = {
+						start_insert = false,
+					},
+					input = {
+						height = 13,
+					},
+					-- Test the new configurable height feature
+					selected_files = {
+						height = 8, -- Try a custom height (default is 6)
+					},
+				},
+			})
+		end,
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"MunifTanjim/nui.nvim",
+			"nvim-telescope/telescope.nvim", -- for file_selector provider telescope
+			"hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
+			"zbirenbaum/copilot.lua", -- for providers='copilot'
+			{
+				-- support for image pasting
+				"HakonHarnes/img-clip.nvim",
+				event = "VeryLazy",
+				opts = {
+					-- recommended settings
+					default = {
+						embed_image_as_base64 = false,
+						prompt_for_file_name = false,
+						drag_and_drop = {
+							insert_mode = true,
+						},
+						-- required for Windows users
+						use_absolute_path = true,
+					},
+				},
+			},
+			{
+				-- Make sure to set this up properly if you have lazy=true
+				"MeanderingProgrammer/render-markdown.nvim",
+				opts = {
+					file_types = { "markdown", "Avante" },
+				},
+				ft = { "markdown", "Avante" },
+			},
+		},
+	},
 
 	-- Debugging
 	{
@@ -497,31 +505,45 @@ return {
 		end,
 	},
 
-	{
-		"coder/claudecode.nvim",
-		dependencies = { "folke/snacks.nvim" },
-		opts = {
-			terminal_cmd = "~/.claude/local/claude", -- Point to local installation
-		},
-		config = true,
-		keys = {
-			{ "<leader>a", nil, desc = "AI/Claude Code" },
-			{ "<leader>ac", "<cmd>ClaudeCode<cr>", desc = "Toggle Claude" },
-			{ "<leader>af", "<cmd>ClaudeCodeFocus<cr>", desc = "Focus Claude" },
-			{ "<leader>ar", "<cmd>ClaudeCode --resume<cr>", desc = "Resume Claude" },
-			{ "<leader>aC", "<cmd>ClaudeCode --continue<cr>", desc = "Continue Claude" },
-			{ "<leader>am", "<cmd>ClaudeCodeSelectModel<cr>", desc = "Select Claude model" },
-			{ "<leader>ab", "<cmd>ClaudeCodeAdd %<cr>", desc = "Add current buffer" },
-			{ "<leader>as", "<cmd>ClaudeCodeSend<cr>", mode = "v", desc = "Send to Claude" },
-			{
-				"<leader>as",
-				"<cmd>ClaudeCodeTreeAdd<cr>",
-				desc = "Add file",
-				ft = { "NvimTree", "neo-tree", "oil", "minifiles" },
-			},
-			-- Diff management
-			{ "<leader>aa", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
-			{ "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
-		},
-	},
+	--{
+	--	"coder/claudecode.nvim",
+	--	dependencies = { "folke/snacks.nvim" },
+	--	opts = {
+	--		terminal_cmd = "~/.claude/local/claude", -- Point to local installation
+	--	},
+	--	config = true,
+	--	keys = {
+	--		{ "<leader>a", nil, desc = "AI/Claude Code" },
+	--		{ "<leader>ac", "<cmd>ClaudeCode<cr>", desc = "Toggle Claude" },
+	--		{ "<leader>af", "<cmd>ClaudeCodeFocus<cr>", desc = "Focus Claude" },
+	--		{ "<leader>ar", "<cmd>ClaudeCode --resume<cr>", desc = "Resume Claude" },
+	--		{ "<leader>aC", "<cmd>ClaudeCode --continue<cr>", desc = "Continue Claude" },
+	--		{ "<leader>am", "<cmd>ClaudeCodeSelectModel<cr>", desc = "Select Claude model" },
+	--		{ "<leader>ab", "<cmd>ClaudeCodeAdd %<cr>", desc = "Add current buffer" },
+	--		{ "<leader>as", "<cmd>ClaudeCodeSend<cr>", mode = "v", desc = "Send to Claude" },
+	--		{
+	--			"<leader>as",
+	--			"<cmd>ClaudeCodeTreeAdd<cr>",
+	--			desc = "Add file",
+	--			ft = { "NvimTree", "neo-tree", "oil", "minifiles" },
+	--		},
+	--		-- Diff management
+	--		{ "<leader>aa", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
+	--		{ "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
+	--	},
+	--},
+
+	-- CopilotChat.nvim - AI chat assistant for GitHub Copilot
+	--{
+	--	{
+	--		"CopilotC-Nvim/CopilotChat.nvim",
+	--		dependencies = {
+	--			{ "nvim-lua/plenary.nvim", branch = "master" },
+	--		},
+	--		build = "make tiktoken",
+	--		opts = {
+	--			-- See Configuration section for options
+	--		},
+	--	},
+	--},
 }
