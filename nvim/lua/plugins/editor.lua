@@ -513,32 +513,66 @@ return {
 	},
 
 	--{
-	--	"coder/claudecode.nvim",
-	--	dependencies = { "folke/snacks.nvim" },
-	--	opts = {
-	--		terminal_cmd = "~/.claude/local/claude", -- Point to local installation
+	--	"greggh/claude-code.nvim",
+	--	dependencies = {
+	--		"nvim-lua/plenary.nvim", -- Required for git operations
 	--	},
-	--	config = true,
-	--	keys = {
-	--		{ "<leader>a", nil, desc = "AI/Claude Code" },
-	--		{ "<leader>ac", "<cmd>ClaudeCode<cr>", desc = "Toggle Claude" },
-	--		{ "<leader>af", "<cmd>ClaudeCodeFocus<cr>", desc = "Focus Claude" },
-	--		{ "<leader>ar", "<cmd>ClaudeCode --resume<cr>", desc = "Resume Claude" },
-	--		{ "<leader>aC", "<cmd>ClaudeCode --continue<cr>", desc = "Continue Claude" },
-	--		{ "<leader>am", "<cmd>ClaudeCodeSelectModel<cr>", desc = "Select Claude model" },
-	--		{ "<leader>ab", "<cmd>ClaudeCodeAdd %<cr>", desc = "Add current buffer" },
-	--		{ "<leader>as", "<cmd>ClaudeCodeSend<cr>", mode = "v", desc = "Send to Claude" },
-	--		{
-	--			"<leader>as",
-	--			"<cmd>ClaudeCodeTreeAdd<cr>",
-	--			desc = "Add file",
-	--			ft = { "NvimTree", "neo-tree", "oil", "minifiles" },
-	--		},
-	--		-- Diff management
-	--		{ "<leader>aa", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
-	--		{ "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
-	--	},
+	--	config = function()
+	--		require("claude-code").setup({
+	--			window = {
+	--				position = "vertical",
+	--				enter_insert = false,
+	--			}
+	--		})
+	--	end,
 	--},
+
+	{
+		"coder/claudecode.nvim",
+		dependencies = { "folke/snacks.nvim" },
+		config = true,
+		keys = {
+			--{ "<leader>a", nil, desc = "AI/Claude Code" },
+			--{ "<leader>ac", "<cmd>ClaudeCode<cr>", desc = "Toggle Claude" },
+			{ "<C-,>", "<cmd>ClaudeCodeFocus<cr>", desc = "Claude Code", mode = { "n", "x" } },
+			--{ "<leader>ar", "<cmd>ClaudeCode --resume<cr>", desc = "Resume Claude" },
+			--{ "<leader>aC", "<cmd>ClaudeCode --continue<cr>", desc = "Continue Claude" },
+			--{ "<leader>am", "<cmd>ClaudeCodeSelectModel<cr>", desc = "Select Claude model" },
+			--{ "<leader>ab", "<cmd>ClaudeCodeAdd %<cr>", desc = "Add current buffer" },
+			--{ "<leader>as", "<cmd>ClaudeCodeSend<cr>", mode = "v", desc = "Send to Claude" },
+			--{
+			--	"<leader>as",
+			--	"<cmd>ClaudeCodeTreeAdd<cr>",
+			--	desc = "Add file",
+			--	ft = { "NvimTree", "neo-tree", "oil", "minifiles" },
+			--},
+			---- Diff management
+			--{ "<leader>aa", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
+			--{ "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
+		},
+		opts = {
+			terminal = {
+				snacks_win_opts = {
+					position = "float",
+					width = 0.9,
+					height = 0.9,
+					keys = {
+						claude_hide = {
+							"<C-,>",
+							function(self)
+								self:hide()
+							end,
+							mode = "t",
+							desc = "Hide",
+						},
+					},
+					--position = "right",
+					--width = 0.4,
+					--border = "rounded",
+				},
+			},
+		},
+	},
 
 	-- CopilotChat.nvim - AI chat assistant for GitHub Copilot
 	--{
@@ -553,4 +587,92 @@ return {
 	--		},
 	--	},
 	--},
+	{
+		"NickvanDyke/opencode.nvim",
+		dependencies = {
+			-- Recommended for better prompt input, and required to use opencode.nvim's embedded terminal — otherwise optional
+			{ "folke/snacks.nvim", opts = { input = { enabled = true } } },
+		},
+		---@type opencode.Opts
+		opts = {
+			-- Your configuration, if any — see lua/opencode/config.lua
+		},
+		keys = {
+			-- Recommended keymaps
+			{
+				"<leader>oA",
+				function()
+					require("opencode").ask()
+				end,
+				desc = "Ask opencode",
+			},
+			{
+				"<leader>oa",
+				function()
+					require("opencode").ask("@cursor: ")
+				end,
+				desc = "Ask opencode about this",
+				mode = "n",
+			},
+			{
+				"<leader>oa",
+				function()
+					require("opencode").ask("@selection: ")
+				end,
+				desc = "Ask opencode about selection",
+				mode = "v",
+			},
+			{
+				"<leader>ot",
+				function()
+					require("opencode").toggle()
+				end,
+				desc = "Toggle embedded opencode",
+			},
+			{
+				"<leader>on",
+				function()
+					require("opencode").command("session_new")
+				end,
+				desc = "New session",
+			},
+			{
+				"<leader>oy",
+				function()
+					require("opencode").command("messages_copy")
+				end,
+				desc = "Copy last message",
+			},
+			{
+				"<S-C-u>",
+				function()
+					require("opencode").command("messages_half_page_up")
+				end,
+				desc = "Scroll messages up",
+			},
+			{
+				"<S-C-d>",
+				function()
+					require("opencode").command("messages_half_page_down")
+				end,
+				desc = "Scroll messages down",
+			},
+			{
+				"<leader>op",
+				function()
+					require("opencode").select_prompt()
+				end,
+				desc = "Select prompt",
+				mode = { "n", "v" },
+			},
+			-- Example: keymap for custom prompt
+			{
+				"<leader>oe",
+				function()
+					require("opencode").prompt("Explain @cursor and its context")
+				end,
+				desc = "Explain code near cursor",
+			},
+		},
+	},
 }
