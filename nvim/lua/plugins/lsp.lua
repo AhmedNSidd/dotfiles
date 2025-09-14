@@ -247,10 +247,6 @@ return {
 						extra_args = { "--indent-width", "2" },
 					}),
 
-					-- JavaScript/React
-					null_ls.builtins.formatting.prettierd,
-					null_ls.builtins.diagnostics.eslint_d,
-
 					-- YAML
 					null_ls.builtins.formatting.yamlfmt,
 					null_ls.builtins.diagnostics.yamllint,
