@@ -551,6 +551,7 @@ return {
 			--{ "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
 		},
 		opts = {
+		    terminal_cmd = "~/.claude/local/claude", -- Point to local installation
 			terminal = {
 				snacks_win_opts = {
 					position = "float",
