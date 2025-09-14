@@ -554,9 +554,9 @@ return {
 		    terminal_cmd = "~/.claude/local/claude", -- Point to local installation
 			terminal = {
 				snacks_win_opts = {
-					position = "float",
-					width = 0.9,
-					height = 0.9,
+					position = "right",
+					width = 0.4,
+					border = "rounded",
 					keys = {
 						claude_hide = {
 							"<C-,>",
