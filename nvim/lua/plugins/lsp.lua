@@ -38,37 +38,26 @@ return {
 				ensure_installed = { "gopls", "jdtls", "lua_ls", "pyright", "texlab", "ts_ls" },
 				automatic_enable = false,
 			})
-			-- Loop over servers and apply common settings
-			local lspconfig = require("lspconfig")
-			for _, server in ipairs({ "gopls", "lua_ls", "pyright", "ts_ls" }) do
-				if server == "lua_ls" then
-					lspconfig.lua_ls.setup({
-						on_attach = handlers.on_attach,
-						capabilities = capabilities,
-						settings = {
-							Lua = {
-								diagnostics = {
-									globals = { "vim" },
-								},
-								workspace = {
-									-- Make the server aware of Neovim runtime files
-									library = vim.api.nvim_get_runtime_file("", true),
-									checkThirdParty = false, -- Avoid issues with third-party libraries in your Neovim config
-								},
-							},
+
+			-- Define LSP server configurations using the new vim.lsp.config API
+			vim.lsp.config("lua_ls", {
+				on_attach = handlers.on_attach,
+				capabilities = capabilities,
+				settings = {
+					Lua = {
+						diagnostics = {
+							globals = { "vim" },
 						},
-					})
-				else
-					lspconfig[server].setup({
-						on_attach = handlers.on_attach,
-						capabilities = capabilities,
-						-- you can override per-server settings here:
-						-- settings = server == "gopls" and { gopls = { gofumpt = true } } or nil,
-					})
-				end
-			end
-			-- Add texlab configuration
-			lspconfig.texlab.setup({
+						workspace = {
+							-- Make the server aware of Neovim runtime files
+							library = vim.api.nvim_get_runtime_file("", true),
+							checkThirdParty = false,
+						},
+					},
+				},
+			})
+
+			vim.lsp.config("texlab", {
 				on_attach = handlers.on_attach,
 				capabilities = capabilities,
 				settings = {
@@ -79,13 +68,24 @@ return {
 							onSave = true,
 						},
 						forwardSearch = {
-							executable = "skim", -- Change to "skim" on macOS
+							executable = "skim",
 							args = { "--synctex-forward", "%l:1:%f", "%p" },
 						},
 						chktex = { onOpenAndSave = true },
 					},
 				},
 			})
+
+			-- Configure servers with default settings
+			for _, server in ipairs({ "gopls", "pyright", "ts_ls" }) do
+				vim.lsp.config(server, {
+					on_attach = handlers.on_attach,
+					capabilities = capabilities,
+				})
+			end
+
+			-- Enable all configured servers
+			vim.lsp.enable({ "gopls", "lua_ls", "pyright", "texlab", "ts_ls" })
 		end,
 	},
 
