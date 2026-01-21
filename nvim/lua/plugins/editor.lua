@@ -551,12 +551,15 @@ return {
 			--{ "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
 		},
 		opts = {
-		    terminal_cmd = "~/.claude/local/claude", -- Point to local installation
+		    terminal_cmd = "~/.local/bin/claude", -- Point to local installation
 			terminal = {
 				snacks_win_opts = {
 					position = "right",
 					width = 0.4,
 					border = "rounded",
+					wo = {
+						spell = false, -- Disable spell checking in terminal
+					},
 					keys = {
 						claude_hide = {
 							"<C-,>",
@@ -567,26 +570,132 @@ return {
 							desc = "Hide",
 						},
 					},
-					--position = "right",
-					--width = 0.4,
-					--border = "rounded",
 				},
+			},
+			diff_opts = {
+				vertical_split = false, -- Use horizontal splits for diffs
 			},
 		},
 	},
 
-	-- CopilotChat.nvim - AI chat assistant for GitHub Copilot
+	-- GitHub Copilot inline completions (disabled, using Claude Code instead)
 	--{
-	--	{
-	--		"CopilotC-Nvim/CopilotChat.nvim",
-	--		dependencies = {
-	--			{ "nvim-lua/plenary.nvim", branch = "master" },
-	--		},
-	--		build = "make tiktoken",
-	--		opts = {
-	--			-- See Configuration section for options
-	--		},
+	--	"zbirenbaum/copilot.lua",
+	--	cmd = "Copilot",
+	--	event = "InsertEnter",
+	--	config = function()
+	--		require("copilot").setup({
+	--			panel = {
+	--				enabled = true,
+	--				auto_refresh = false,
+	--				keymap = {
+	--					jump_prev = "[[",
+	--					jump_next = "]]",
+	--					accept = "<CR>",
+	--					refresh = "gr",
+	--					open = "<M-CR>",
+	--				},
+	--				layout = {
+	--					position = "bottom",
+	--					ratio = 0.4,
+	--				},
+	--			},
+	--			suggestion = {
+	--				enabled = true,
+	--				auto_trigger = true,
+	--				hide_during_completion = true,
+	--				debounce = 75,
+	--				keymap = {
+	--					accept = "<M-l>",
+	--					accept_word = false,
+	--					accept_line = false,
+	--					next = "<M-]>",
+	--					prev = "<M-[>",
+	--					dismiss = "<C-]>",
+	--				},
+	--			},
+	--			filetypes = {
+	--				yaml = false,
+	--				markdown = false,
+	--				help = false,
+	--				gitcommit = false,
+	--				gitrebase = false,
+	--				hgcommit = false,
+	--				svn = false,
+	--				cvs = false,
+	--				["."] = false,
+	--			},
+	--			copilot_node_command = "node",
+	--			server_opts_overrides = {},
+	--		})
+	--	end,
+	--},
+
+	-- CopilotChat.nvim - AI chat assistant for GitHub Copilot (disabled, using Claude Code instead)
+	--{
+	--	"CopilotC-Nvim/CopilotChat.nvim",
+	--	branch = "main",
+	--	dependencies = {
+	--		{ "zbirenbaum/copilot.lua" },
+	--		{ "nvim-lua/plenary.nvim" },
 	--	},
+	--	build = "make tiktoken",
+	--	keys = {
+	--		{ "<C-,>", "<cmd>CopilotChatToggle<cr>", desc = "Toggle Copilot Chat", mode = { "n", "x" } },
+	--		{ "<leader>cce", "<cmd>CopilotChatExplain<cr>", desc = "Copilot: Explain", mode = { "n", "v" } },
+	--		{ "<leader>cct", "<cmd>CopilotChatTests<cr>", desc = "Copilot: Generate tests", mode = { "n", "v" } },
+	--		{ "<leader>ccr", "<cmd>CopilotChatReview<cr>", desc = "Copilot: Review code", mode = { "n", "v" } },
+	--		{ "<leader>ccR", "<cmd>CopilotChatRefactor<cr>", desc = "Copilot: Refactor", mode = { "n", "v" } },
+	--		{ "<leader>ccn", "<cmd>CopilotChatBetterNamings<cr>", desc = "Copilot: Better names", mode = { "n", "v" } },
+	--		{ "<leader>ccb", "<cmd>CopilotChatBuffer<cr>", desc = "Copilot: Chat about current buffer", mode = { "n" } },
+	--	},
+	--	config = function()
+	--		require("CopilotChat").setup({
+	--			debug = false,
+	--			model = "claude-sonnet-4.5", -- Latest Claude model in GitHub Copilot (generally available as of Oct 2025)
+	--			window = {
+	--				layout = "vertical",
+	--				width = 0.4,
+	--				height = 1,
+	--				relative = "editor",
+	--				border = "rounded",
+	--			},
+	--			mappings = {
+	--				complete = {
+	--					detail = "Use @<Tab> or /<Tab> for options.",
+	--					insert = "<Tab>",
+	--				},
+	--				close = {
+	--					normal = "q",
+	--					insert = "<C-c>",
+	--				},
+	--				reset = {
+	--					normal = "<C-r>",
+	--					insert = "<C-r>",
+	--				},
+	--				submit_prompt = {
+	--					normal = "<CR>",
+	--					insert = "<C-s>",
+	--				},
+	--				accept_diff = {
+	--					normal = "<C-y>",
+	--					insert = "<C-y>",
+	--				},
+	--				yank_diff = {
+	--					normal = "gy",
+	--				},
+	--				show_diff = {
+	--					normal = "gd",
+	--				},
+	--				show_system_prompt = {
+	--					normal = "gp",
+	--				},
+	--				show_user_selection = {
+	--					normal = "gs",
+	--				},
+	--			},
+	--		})
+	--	end,
 	--},
 	{
 		"NickvanDyke/opencode.nvim",
