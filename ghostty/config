@@ -1,4 +1,4 @@
-theme = Catppuccin Mocha
+theme = light:Catppuccin Latte,dark:Catppuccin Mocha
 window-padding-balance = true
 window-padding-color = extend
 
