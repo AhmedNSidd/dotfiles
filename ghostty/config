@@ -4,3 +4,6 @@ window-padding-color = extend
 
 # SSH compatibility: try to install terminfo on remote, fall back to xterm-256color
 shell-integration-features = ssh-terminfo,ssh-env
+
+# Make Shift+Enter send a literal newline instead of escape sequence
+keybind = shift+enter=text:\n
