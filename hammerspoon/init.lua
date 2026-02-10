@@ -87,3 +87,14 @@ end
 -- Set up hotkeys for moving to physical left and right screens
 hotkey.bind({ "alt", "cmd" }, "left", moveWindowToLeftScreen)
 hotkey.bind({ "alt", "cmd" }, "right", moveWindowToRightScreen)
+
+-- Auto-quit Zoom when no meeting is active (checks every 2 minutes)
+hs.timer.doEvery(120, function()
+	local zoom = hs.application.find("zoom.us")
+	if zoom then
+		local _, _, _, rc = hs.execute("pgrep -f CptHost")
+		if rc ~= 0 then
+			zoom:kill()
+		end
+	end
+end)
