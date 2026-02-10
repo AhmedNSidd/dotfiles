@@ -225,7 +225,7 @@ return {
 					"eslint_d",
 					"prettierd",
 				},
-				automatic_installation = true,
+				automatic_installation = false,
 				automatic_setup = false,
 			})
 		end,

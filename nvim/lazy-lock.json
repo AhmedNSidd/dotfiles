@@ -11,7 +11,7 @@
   "cmp-vimtex": { "branch": "master", "commit": "5283bf9108ef33d41e704027b9ef22437ce7a15b" },
   "cmp_luasnip": { "branch": "master", "commit": "98d9cb5c2c38532bd9bdb481067b20fea8f32e90" },
   "gitsigns.nvim": { "branch": "main", "commit": "abf82a65f185bd54adc0679f74b7d6e1ada690c9" },
-  "lazy.nvim": { "branch": "main", "commit": "306a05526ada86a7b30af95c5cc81ffba93fef97" },
+  "lazy.nvim": { "branch": "main", "commit": "85c7ff3711b730b4030d03144f6db6375044ae82" },
   "linediff.vim": { "branch": "main", "commit": "29fa617fc10307a1e0ae82a8761114e465d17b06" },
   "mason-lspconfig.nvim": { "branch": "main", "commit": "80c0130c5f16b551865a69e832f1feadeedb5fbe" },
   "mason-null-ls.nvim": { "branch": "main", "commit": "8e7806acaa87fae64f0bfde25bb4b87c18bd19b4" },
