@@ -194,163 +194,139 @@ return {
 	--	end,
 	--},
 
-	-- AI Assistant
-	--{
-	--	"olimorris/codecompanion.nvim",
-	--	dependencies = {
-	--		"nvim-lua/plenary.nvim",
-	--		"nvim-treesitter/nvim-treesitter",
-	--		"hrsh7th/nvim-cmp",
-	--		"github/copilot.vim", -- for copilot integration
-	--		"ravitemer/codecompanion-history.nvim",
-	--		--"ravitemer/mcphub.nvim",
-	--	},
-	--	config = function()
-	--		-- Disable Copilot autocompletion while keeping API available
-	--		vim.g.copilot_enabled = 0
+	--[[ AI Assistant (codecompanion) — disabled, trying opencode.nvim
+	{
+		"olimorris/codecompanion.nvim",
+		keys = {
+			{ "<leader>cc", "<cmd>CodeCompanionChat Toggle<cr>", desc = "Toggle CodeCompanion Chat", mode = { "n", "x" } },
+		},
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-treesitter/nvim-treesitter",
+			"hrsh7th/nvim-cmp",
+			"zbirenbaum/copilot.lua",
+			"ravitemer/codecompanion-history.nvim",
+		},
+		config = function()
+			require("codecompanion").setup({
+				strategies = {
+					chat = {
+						roles = {
+							llm = function(adapter)
+								return adapter.model.name
+							end,
+							user = "Ahmed",
+						},
+						tools = {
+							opts = {
+								default_tools = { "web_search" },
+							},
+						},
+					},
+				},
+				cmp = {
+					enabled = true,
+				},
+				providers = {
+					slash_commands = "telescope",
+					action_palette = "telescope",
+				},
+				display = {
+					chat = {
+						window = {
+							layout = "vertical",
+							width = 0.25,
+						},
+						auto_scroll = false,
+						intro_message = "What are your commands?",
+					},
+				},
+				adapters = {
+					copilot = function()
+						return require("codecompanion.adapters").extend("copilot", {
+							schema = {
+								model = {
+									default = "claude-3.7-sonnet-thought",
+								},
+							},
+						})
+					end,
+				},
+				extensions = {
+					history = {
+						enabled = true,
+						opts = {
+							continue_last_chat = false,
+							delete_on_clearing_chat = false,
+							on_open_history = function()
+								vim.schedule(function()
+									require("cmp").reset()
+								end)
+							end,
+						},
+					},
+				},
+			})
+		end,
+	},
 
-	--		require("codecompanion").setup({
-	--			strategies = {
-	--				chat = {
-	--					roles = {
-	--						llm = function(adapter)
-	--							return adapter.model.name
-	--						end,
-	--						user = "Ahmed",
-	--					},
-	--				},
-	--			},
-
-	--			cmp = {
-	--				enabled = true,
-	--			},
-	--			display = {
-	--				chat = {
-	--					window = {
-	--						layout = "vertical",
-	--						width = 0.25,
-	--					},
-	--					auto_scroll = false,
-	--					intro_message = "What are your commands?",
-	--				},
-	--			},
-	--			adapters = {
-	--				copilot = function()
-	--					return require("codecompanion.adapters").extend("copilot", {
-	--						schema = {
-	--							model = {
-	--								default = "claude-3.7-sonnet-thought",
-	--							},
-	--						},
-	--					})
-	--				end,
-	--			},
-	--			extensions = {
-	--				history = {
-	--					enabled = true,
-	--					opts = {
-	--						continue_last_chat = false,
-	--						delete_on_clearing_chat = false,
-	--						-- Add this callback to reset cmp after opening historical chat
-	--						on_open_history = function()
-	--							vim.schedule(function()
-	--								require("cmp").reset()
-	--							end)
-	--						end,
-	--					},
-	--				},
-	--				--mcphub = {
-	--				--	callback = "mcphub.extensions.codecompanion",
-	--				--	opts = {
-	--				--		-- MCP Tools
-	--				--		make_tools = true, -- Make individual tools (@server__tool) and server groups (@server) from MCP servers
-	--				--		show_server_tools_in_chat = true, -- Show individual tools in chat completion (when make_tools=true)
-	--				--		add_mcp_prefix_to_tool_names = false, -- Add mcp__ prefix (e.g `@mcp__github`, `@mcp__neovim__list_issues`)
-	--				--		show_result_in_chat = true, -- Show tool results directly in chat buffer
-	--				--		format_tool = nil, -- function(tool_name:string, tool: CodeCompanion.Agent.Tool) : string Function to format tool names to show in the chat buffer
-	--				--		-- MCP Resources
-	--				--		make_vars = true, -- Convert MCP resources to #variables for prompts
-	--				--		-- MCP Prompts
-	--				--		make_slash_commands = true, -- Add MCP prompts as /slash commands
-	--				--	},
-	--				--},
-	--			},
-	--		})
-	--	end,
-	--},
-	--{
-	--	-- Use local development version for testing configurable height feature
-	--	"yetone/avante.nvim",
-	--	build = vim.fn.has("win32") ~= 0 and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
-	--		or "make",
-	--	event = "VeryLazy",
-	--	version = false,
-	--	config = function()
-	--		require("avante_lib").load()
-	--		require("avante").setup({
-	--			provider = "copilot",
-	--			selector = {
-	--				provider = "telescope",
-	--				-- Exclude Oil from auto-selection
-	--				exclude_auto_select = { "oil" },
-	--			},
-	--			windows = {
-	--				edit = {
-	--					start_insert = false,
-	--				},
-	--				ask = {
-	--					start_insert = false,
-	--				},
-	--				input = {
-	--					height = 13,
-	--				},
-	--				-- Test the new configurable height feature
-	--				selected_files = {
-	--					height = 8, -- Try a custom height (default is 6)
-	--				},
-	--			},
-	--		})
-	--	end,
-	--	dependencies = {
-	--		"nvim-lua/plenary.nvim",
-	--		"MunifTanjim/nui.nvim",
-	--		"nvim-telescope/telescope.nvim", -- for file_selector provider telescope
-	--		"hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
-	--		{
-	--			"zbirenbaum/copilot.lua",
-	--			cmd = "Copilot",
-	--			event = "InsertEnter",
-	--			config = function()
-	--				require("copilot").setup({})
-	--			end,
-	--		},
-	--		{
-	--			-- support for image pasting
-	--			"HakonHarnes/img-clip.nvim",
-	--			event = "VeryLazy",
-	--			opts = {
-	--				-- recommended settings
-	--				default = {
-	--					embed_image_as_base64 = false,
-	--					prompt_for_file_name = false,
-	--					drag_and_drop = {
-	--						insert_mode = true,
-	--					},
-	--					-- required for Windows users
-	--					use_absolute_path = true,
-	--				},
-	--			},
-	--		},
-	--		{
-	--			-- Make sure to set this up properly if you have lazy=true
-	--			"MeanderingProgrammer/render-markdown.nvim",
-	--			opts = {
-	--				file_types = { "markdown", "Avante" },
-	--			},
-	--			ft = { "markdown", "Avante" },
-	--		},
-	--	},
-	--},
+	-- AI Assistant (avante) — disabled, trying opencode.nvim
+	{
+		"yetone/avante.nvim",
+		build = vim.fn.has("win32") ~= 0 and "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false"
+			or "make",
+		event = "VeryLazy",
+		version = false,
+		config = function()
+			require("avante_lib").load()
+			require("avante").setup({
+				provider = "copilot",
+				web_search_engine = {
+					provider = "tavily",
+				},
+				selector = {
+					provider = "telescope",
+					exclude_auto_select = { "oil" },
+				},
+				windows = {
+					edit = { start_insert = false },
+					ask = { start_insert = false },
+					input = { height = 13 },
+					selected_files = { height = 8 },
+				},
+			})
+		end,
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"MunifTanjim/nui.nvim",
+			"nvim-telescope/telescope.nvim",
+			"hrsh7th/nvim-cmp",
+			{
+				"zbirenbaum/copilot.lua",
+				config = function()
+					require("copilot").setup({})
+				end,
+			},
+			{
+				"HakonHarnes/img-clip.nvim",
+				event = "VeryLazy",
+				opts = {
+					default = {
+						embed_image_as_base64 = false,
+						prompt_for_file_name = false,
+						drag_and_drop = { insert_mode = true },
+						use_absolute_path = true,
+					},
+				},
+			},
+			{
+				"MeanderingProgrammer/render-markdown.nvim",
+				opts = { file_types = { "markdown", "Avante" } },
+				ft = { "markdown", "Avante" },
+			},
+		},
+	},
+	--]]
 
 	-- Debugging
 	{
@@ -529,6 +505,7 @@ return {
 
 	{
 		"coder/claudecode.nvim",
+		branch = "nvim-integration-xg1c",
 		dependencies = { "folke/snacks.nvim" },
 		config = true,
 		keys = {
