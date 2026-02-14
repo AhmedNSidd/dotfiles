@@ -682,7 +682,10 @@ return {
 		},
 		---@type opencode.Opts
 		opts = {
-			-- Your configuration, if any — see lua/opencode/config.lua
+			-- Disable Neovim permission prompts - let OpenCode handle them in terminal
+			permissions = {
+				enabled = false,  -- Disable nvim intercepting permission requests
+			},
 		},
 		keys = {
 			-- Recommended keymaps
