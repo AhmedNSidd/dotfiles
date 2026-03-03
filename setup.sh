@@ -36,6 +36,10 @@ ln -sf "$DOTFILES_DIR/hammerspoon"  "$HOME/.hammerspoon"
 ln -sf "$DOTFILES_DIR/p10k.zsh"     "$HOME/.p10k.zsh"
 ln -sf "$DOTFILES_DIR/vimrc"        "$HOME/.vimrc"
 
+echo "==> Configuring git..."
+git config --global user.name "Ahmed Siddiqui"
+git config --global user.email "ahsiddiqui@equinix.com"
+
 echo "==> Generating SSH keys..."
 mkdir -p "$HOME/.ssh"
 if [ ! -f "$HOME/.ssh/github" ]; then
