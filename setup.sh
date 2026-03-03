@@ -24,6 +24,9 @@ else
   echo "    oh-my-zsh already installed."
 fi
 
+echo "==> Linking powerlevel10k theme..."
+ln -sf "$(brew --prefix)/opt/powerlevel10k/share/powerlevel10k" "$HOME/.oh-my-zsh/custom/themes/powerlevel10k"
+
 echo "==> Setting up symlinks..."
 mkdir -p "$HOME/.config"
 ln -sf "$DOTFILES_DIR/nvim"         "$HOME/.config/nvim"
@@ -67,7 +70,7 @@ EOF
 chmod 600 "$HOME/.ssh/config"
 
 echo "==> Adding GitHub to known_hosts..."
-ssh-keyscan github.com >> "$HOME/.ssh/known_hosts" 2>/dev/null
+ssh-keyscan github.com >> "$HOME/.ssh/known_hosts" 2>/dev/null || true
 
 echo "==> Writing .zshrc..."
 cat > "$HOME/.zshrc" << 'ZSHRC'

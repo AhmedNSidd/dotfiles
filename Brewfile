@@ -36,8 +36,7 @@ cask "ghostty"
 cask "hammerspoon"
 cask "iina"
 cask "karabiner-elements"
-cask "kde-connect"
-cask "keyboard-cleantool"
+cask "keyboardcleantool"
 cask "macos-fuse-t/cask/fuse-t-sshfs"
 cask "pastebot"
 cask "pearcleaner"
@@ -50,11 +49,8 @@ cask "transmit"
 
 # Mac App Store
 mas "WireGuard", id: 1451685025
-mas "UHF - Love your IPTV", id: 6443751726
 
 # Manual installs:
 # - kl: go install github.com/robinovitch61/kl@latest
-#
-# Company-managed (auto-installed by IT):
-# - Admin By Request, Company Portal, Druva inSync, Falcon (CrowdStrike),
-#   Keeper, Microsoft 365 suite, OneDrive, SupportCompanion, Zscaler, Zoom
+# - kde-connect: not available in Homebrew, install from https://kdeconnect.kde.org
+# - howtoconvert: not available in Homebrew or MAS, install from https://howtoconvert.co
