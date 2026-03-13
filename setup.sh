@@ -14,9 +14,6 @@ fi
 echo "==> Running brew bundle..."
 brew bundle --file="$DOTFILES_DIR/Brewfile"
 
-echo "==> Installing kl..."
-go install github.com/robinovitch61/kl@latest
-
 echo "==> Installing oh-my-zsh..."
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended

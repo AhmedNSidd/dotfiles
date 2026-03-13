@@ -1,6 +1,7 @@
 # Taps
 tap "anomalyco/tap"
 tap "macos-fuse-t/cask"
+tap "robinovitch61/tap"
 
 # CLI Tools
 brew "fd"
@@ -15,6 +16,7 @@ brew "powerlevel10k"
 brew "python@3.12"
 brew "mas"
 brew "anomalyco/tap/opencode"
+brew "robinovitch61/tap/kl"
 
 # Apps
 cask "1password"
@@ -51,6 +53,5 @@ cask "transmit"
 mas "WireGuard", id: 1451685025
 
 # Manual installs:
-# - kl: go install github.com/robinovitch61/kl@latest
 # - kde-connect: not available in Homebrew, install from https://kdeconnect.kde.org
 # - howtoconvert: not available in Homebrew or MAS, install from https://howtoconvert.co
