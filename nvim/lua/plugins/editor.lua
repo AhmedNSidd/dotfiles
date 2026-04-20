@@ -505,7 +505,6 @@ return {
 
 	{
 		"coder/claudecode.nvim",
-		branch = "nvim-integration-xg1c",
 		dependencies = { "folke/snacks.nvim" },
 		config = true,
 		keys = {
