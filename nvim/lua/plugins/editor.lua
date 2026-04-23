@@ -506,7 +506,29 @@ return {
 	{
 		"coder/claudecode.nvim",
 		dependencies = { "folke/snacks.nvim" },
-		config = true,
+		config = function(_, opts)
+			require("claudecode").setup(opts)
+		end,
+		init = function()
+			-- Fix Cmd+V paste truncation in terminal buffers by coalescing streamed phases
+			-- https://github.com/coder/claudecode.nvim/issues/15
+			local chunks = {}
+			local orig_paste = vim.paste
+			vim.paste = function(lines, phase)
+				if vim.bo.buftype ~= "terminal" or phase == -1 then
+					return orig_paste(lines, phase)
+				end
+				for _, line in ipairs(lines) do
+					chunks[#chunks + 1] = line
+				end
+				if phase == 3 then
+					local buffered = chunks
+					chunks = {}
+					return orig_paste(buffered, -1)
+				end
+				return true
+			end
+		end,
 		keys = {
 			--{ "<leader>a", nil, desc = "AI/Claude Code" },
 			--{ "<leader>ac", "<cmd>ClaudeCode<cr>", desc = "Toggle Claude" },
