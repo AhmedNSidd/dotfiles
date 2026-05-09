@@ -2,6 +2,12 @@
   "effortLevel": "high",
   "editorMode": "vim",
   "agentPushNotifEnabled": true,
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(mas search:*)"
+    ]
+  },
   "hooks": {
     "Notification": [
       {
