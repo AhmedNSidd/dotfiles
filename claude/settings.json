@@ -1,7 +1,13 @@
 {
   "effortLevel": "high",
   "editorMode": "vim",
+  "model": "claude-opus-4-6",
+  "theme": "dark-ansi",
   "agentPushNotifEnabled": true,
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
   "permissions": {
     "allow": [
       "WebSearch",
