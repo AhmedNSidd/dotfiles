@@ -13,27 +13,5 @@
       "WebSearch",
       "Bash(mas search:*)"
     ]
-  },
-  "hooks": {
-    "Notification": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "cc-clip-hook"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "cc-clip-hook"
-          }
-        ]
-      }
-    ]
   }
 }
