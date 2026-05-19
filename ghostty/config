@@ -8,4 +8,3 @@ shell-integration-features = ssh-env
 # Make Shift+Enter send a literal newline instead of escape sequence
 keybind = shift+enter=text:\n
 keybind = performable:ctrl+c=copy_to_clipboard
-keybind = performable:ctrl+v=paste_from_clipboard
