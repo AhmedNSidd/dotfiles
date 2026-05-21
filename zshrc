@@ -33,6 +33,10 @@ export TAVILY_API_KEY="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"
 # Aliases
 alias projects='cd ~/workspace/projects'
 
+claude() {
+  command claude --dangerously-skip-permissions "$@"
+}
+
 # Editor
 export EDITOR=nvim
 

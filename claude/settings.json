@@ -1,8 +1,4 @@
 {
-  "effortLevel": "high",
-  "editorMode": "vim",
-  "theme": "dark-ansi",
-  "agentPushNotifEnabled": true,
   "attribution": {
     "commit": "",
     "pr": ""
@@ -12,5 +8,12 @@
       "WebSearch",
       "Bash(mas search:*)"
     ]
-  }
+  },
+  "effortLevel": "high",
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "dark-ansi",
+  "editorMode": "vim",
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true,
+  "remoteControlAtStartup": true
 }
