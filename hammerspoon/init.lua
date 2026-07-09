@@ -90,25 +90,21 @@ hotkey.bind({ "alt", "cmd" }, "right", moveWindowToRightScreen)
 
 -- Auto-quit Zoom when no meeting is active (checks every 2 minutes)
 --
--- Meeting detection: a live Zoom meeting opens a window titled "Zoom Meeting"
--- (or "Zoom Webinar"). When idle, Zoom has no such window. We do NOT rely on
--- helper processes: modern Zoom spawns "caphost" at app launch and keeps it
--- running the whole time, so it is not a meeting indicator (the old "CptHost"
--- process this used to check no longer exists).
+-- Meeting detection: a live Zoom meeting spawns the "CptHost" helper process.
+-- This is distinct from "caphost", which Zoom launches at app startup and keeps
+-- running the whole time it is open (so caphost is NOT a meeting indicator).
+-- The Zoom meeting window is not a standard AXWindow, so window enumeration
+-- reports zero windows even mid-call; the process check is the reliable signal.
 local zoomLog = hs.logger.new("zoomQuit", "info")
 
-local function zoomMeetingActive(zoom)
-	for _, win in ipairs(zoom:allWindows()) do
-		local title = win:title() or ""
-		if title:match("^Zoom Meeting") or title:match("^Zoom Webinar") then
-			return true
-		end
-	end
-	return false
+local function zoomMeetingActive()
+	-- pgrep -x matches the exact process name, so "CptHost" won't match "caphost".
+	local _, _, _, rc = hs.execute("pgrep -x CptHost")
+	return rc == 0
 end
 
--- Require two consecutive idle checks before quitting, so a brief window
--- flicker (e.g. reconnecting) can't kill an active meeting.
+-- Require two consecutive idle checks before quitting, so a brief gap between
+-- meetings (or a reconnect) can't kill an active meeting.
 local zoomIdleCount = 0
 zoomQuitTimer = hs.timer.doEvery(120, function()
 	-- Match by bundle ID: hs.application.find("zoom.us") matches many unrelated
@@ -118,7 +114,7 @@ zoomQuitTimer = hs.timer.doEvery(120, function()
 		zoomIdleCount = 0
 		return
 	end
-	if zoomMeetingActive(zoom) then
+	if zoomMeetingActive() then
 		zoomIdleCount = 0
 		return
 	end
