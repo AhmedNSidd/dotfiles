@@ -89,12 +89,47 @@ hotkey.bind({ "alt", "cmd" }, "left", moveWindowToLeftScreen)
 hotkey.bind({ "alt", "cmd" }, "right", moveWindowToRightScreen)
 
 -- Auto-quit Zoom when no meeting is active (checks every 2 minutes)
-zoomQuitTimer = hs.timer.doEvery(120, function()
-	local zoom = hs.application.find("zoom.us")
-	if zoom then
-		local _, _, _, rc = hs.execute("pgrep -f CptHost")
-		if rc ~= 0 then
-			zoom:kill()
+--
+-- Meeting detection: a live Zoom meeting opens a window titled "Zoom Meeting"
+-- (or "Zoom Webinar"). When idle, Zoom has no such window. We do NOT rely on
+-- helper processes: modern Zoom spawns "caphost" at app launch and keeps it
+-- running the whole time, so it is not a meeting indicator (the old "CptHost"
+-- process this used to check no longer exists).
+local zoomLog = hs.logger.new("zoomQuit", "info")
+
+local function zoomMeetingActive(zoom)
+	for _, win in ipairs(zoom:allWindows()) do
+		local title = win:title() or ""
+		if title:match("^Zoom Meeting") or title:match("^Zoom Webinar") then
+			return true
 		end
 	end
+	return false
+end
+
+-- Require two consecutive idle checks before quitting, so a brief window
+-- flicker (e.g. reconnecting) can't kill an active meeting.
+local zoomIdleCount = 0
+zoomQuitTimer = hs.timer.doEvery(120, function()
+	-- Match by bundle ID: hs.application.find("zoom.us") matches many unrelated
+	-- helper apps (e.g. "zoom.us Calendar Web Content") and may kill the wrong one.
+	local zoom = hs.application.get("us.zoom.xos")
+	if not zoom then
+		zoomIdleCount = 0
+		return
+	end
+	if zoomMeetingActive(zoom) then
+		zoomIdleCount = 0
+		return
+	end
+	zoomIdleCount = zoomIdleCount + 1
+	zoomLog.f("no active meeting (idle check %d/2)", zoomIdleCount)
+	if zoomIdleCount >= 2 then
+		zoomLog.i("quitting Zoom")
+		zoom:kill()
+		zoomIdleCount = 0
+	end
 end)
+
+-- Load the IPC module so the `hs` CLI can introspect/reload this config.
+require("hs.ipc")
