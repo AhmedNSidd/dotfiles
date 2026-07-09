@@ -9,6 +9,7 @@
       "Bash(mas search:*)"
     ]
   },
+  "cleanupPeriodDays": 180,
   "effortLevel": "high",
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark-ansi",
