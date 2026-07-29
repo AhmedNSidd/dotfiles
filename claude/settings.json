@@ -10,7 +10,9 @@
     ]
   },
   "cleanupPeriodDays": 180,
+  "model": "claude-opus-4-8[1m]",
   "effortLevel": "high",
+  "tui": "default",
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark-ansi",
   "editorMode": "vim",
