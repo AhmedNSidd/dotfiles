@@ -7,7 +7,8 @@
     "allow": [
       "WebSearch",
       "Bash(mas search:*)"
-    ]
+    ],
+    "defaultMode": "auto"
   },
   "cleanupPeriodDays": 180,
   "model": "claude-opus-4-8[1m]",
