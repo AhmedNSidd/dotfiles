@@ -26,10 +26,34 @@ return {
 		lazy = false,
 	},
 
+	-- snacks.nvim explorer — a recursive tree view / toggleable sidebar for
+	-- understanding project structure at a glance. Oil stays the default for
+	-- file operations; this is the complementary "see the whole shape" tool.
+	-- (snacks.nvim is already on disk as a claudecode/opencode dependency.)
+	{
+		"folke/snacks.nvim",
+		opts = {
+			explorer = { enabled = true },
+			picker = { enabled = true },
+		},
+		keys = {
+			{
+				"<leader>et",
+				function()
+					require("snacks").explorer()
+				end,
+				desc = "Explorer tree (snacks)",
+			},
+		},
+	},
+
 	-- Fuzzy finder
 	{
 		"nvim-telescope/telescope.nvim",
-		branch = "0.1.x",
+		-- Pin to the latest stable release tag (upstream's recommended install).
+		-- v0.2.x adds horizontal preview scrolling (<C-f>/<C-k>) and highlights
+		-- previews via Neovim's built-in Treesitter. Requires Neovim > 0.10.4.
+		version = "*",
 		dependencies = { "nvim-lua/plenary.nvim" },
 		config = function()
 			require("telescope").setup({
