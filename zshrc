@@ -34,6 +34,7 @@ export TAVILY_API_KEY="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"
 alias projects='cd ~/workspace/projects'
 
 claude() {
+  ~/dotfiles/claude/sync-settings.sh
   command claude --dangerously-skip-permissions "$@"
 }
 

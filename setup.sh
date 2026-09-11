@@ -34,10 +34,12 @@ ln -sf "$DOTFILES_DIR/hammerspoon"  "$HOME/.hammerspoon"
 ln -sf "$DOTFILES_DIR/p10k.zsh"     "$HOME/.p10k.zsh"
 ln -sf "$DOTFILES_DIR/vimrc"        "$HOME/.vimrc"
 
-# Only settings.json — ~/.claude also holds runtime state (history, sessions,
-# projects) that must not be symlinked into the repo.
-mkdir -p "$HOME/.claude"
-ln -sf "$DOTFILES_DIR/claude/settings.json" "$HOME/.claude/settings.json"
+# settings.json is merged into place, not symlinked — ~/.claude also holds
+# runtime state (history, sessions, projects) that must not enter the repo,
+# and Claude Code replaces symlinks with real files when it writes settings.
+# See claude/sync-settings.sh; the `claude` shell function re-runs this merge
+# on every launch so drift self-heals.
+"$DOTFILES_DIR/claude/sync-settings.sh"
 
 echo "==> Configuring git..."
 git config --global user.name "Ahmed Siddiqui"
