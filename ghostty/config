@@ -5,6 +5,11 @@ window-padding-color = extend
 # SSH compatibility: use ssh-env to set TERM=xterm-256color on remote hosts
 shell-integration-features = ssh-env
 
+# Treat the LEFT Option key as Alt/Meta so terminal apps receive <M-…> bindings
+# (e.g. Telescope's <M-f>/<M-k> to scroll the results pane horizontally). The
+# RIGHT Option key still composes accented characters (é, ø, …).
+macos-option-as-alt = left
+
 # Make Shift+Enter send a literal newline instead of escape sequence
 keybind = shift+enter=text:\n
 keybind = performable:ctrl+c=copy_to_clipboard
