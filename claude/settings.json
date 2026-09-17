@@ -13,7 +13,7 @@
   "cleanupPeriodDays": 180,
   "model": "claude-opus-4-8[1m]",
   "effortLevel": "high",
-  "tui": "default",
+  "tui": "fullscreen",
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark-ansi",
   "editorMode": "vim",
