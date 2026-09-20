@@ -39,7 +39,16 @@ return {
 				"diff",
 			},
 			auto_install = true,
-			highlight = { enable = true },
+			highlight = {
+				enable = true,
+				-- Neovim ships a column-aware regex syntax for CSV/TSV
+				-- (runtime/syntax/csv.vim) that rainbow-colors each column.
+				-- The tree-sitter-csv grammar is far more minimal (string/
+				-- number/delimiter only) and, since a TS highlighter suppresses
+				-- the regex :syntax engine, enabling it here makes CSV look
+				-- worse. Skip these filetypes so the built-in syntax wins.
+				disable = { "csv", "tsv" },
+			},
 			indent = { enable = true },
 		},
 	},
