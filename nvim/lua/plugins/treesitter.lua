@@ -39,6 +39,11 @@ return {
 				"diff",
 			},
 			auto_install = true,
+			-- Never auto-install these: the latex/bibtex parsers need the
+			-- external tree-sitter CLI to build, and VimTeX already handles
+			-- .tex highlighting. Without this, auto_install tries (and fails)
+			-- to fetch the latex parser every time a .tex file is opened.
+			ignore_install = { "latex", "bibtex" },
 			highlight = {
 				enable = true,
 				-- Neovim ships a column-aware regex syntax for CSV/TSV
