@@ -13,7 +13,7 @@ return {
 					local handlers = require("config.lsp_handlers")
 					local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
 					-- Path to lombok jar
-					local lombok_path = home .. "/.local/share/java/lombok.jar"
+					local lombok_path = home .. "/.local/share/nvim/mason/packages/jdtls/lombok.jar"
 
 					-- Find debug bundles from Mason installation
 					local bundles = {}
