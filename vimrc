@@ -26,7 +26,6 @@ let g:ale_fixers = {
 let g:ale_go_golines_options = '--shorten-comments --max-len=120'
 " Add to your vimrc
 let g:ale_scala_metals_executable = 'metals'
-let g:ale_scala_metals_project_root = '/Users/ahsiddiqui/Desktop/workspace/projects/personal/watchlistarr'
 " 3. Configure ALE LSP functionality
 let g:ale_completion_enabled = 1
 let g:ale_hover_cursor = 1

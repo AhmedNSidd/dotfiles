@@ -1,0 +1,4 @@
+# Personal-only additions (installed on top of Brewfile with: ./setup.sh personal)
+
+# Apps
+cask "plex-htpc"

@@ -305,9 +305,6 @@ return {
 			require("avante_lib").load()
 			require("avante").setup({
 				provider = "copilot",
-				web_search_engine = {
-					provider = "tavily",
-				},
 				selector = {
 					provider = "telescope",
 					exclude_auto_select = { "oil" },

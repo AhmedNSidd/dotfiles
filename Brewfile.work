@@ -1,0 +1,17 @@
+# Work-only additions (installed on top of Brewfile with: ./setup.sh work)
+
+# Taps
+tap "robinovitch61/tap"
+
+# Kubernetes
+brew "k9s"
+brew "kubernetes-cli"
+brew "robinovitch61/tap/kl"
+cask "freelens"
+
+# JVM (JAVA_HOME is set in zsh/work.zsh)
+brew "openjdk@21"
+
+# DB / API tools
+cask "datagrip"
+cask "bruno"
