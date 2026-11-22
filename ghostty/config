@@ -2,6 +2,9 @@ theme = light:Catppuccin Latte,dark:Catppuccin Mocha
 window-padding-balance = true
 window-padding-color = extend
 
+# Default font size for new windows (Ghostty's macOS default is 13)
+font-size = 15
+
 # SSH compatibility: use ssh-env to set TERM=xterm-256color on remote hosts
 shell-integration-features = ssh-env
 
